@@ -81,6 +81,13 @@ public class PasswordResetController {
     // Lida com a redefinição da senha
     @PostMapping("/updatePassword")
     public String savePassword(Locale locale, PasswordDto passwordDto, RedirectAttributes redirectAttributes) {
+        // Para validar o campo confirmação de senha
+        if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmPassword())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "As senhas não coincidem");
+            return "redirect:/changePassword?token=" + passwordDto.getToken();
+        }
+
+        // Para validar token
         String result = usuarioService.validatePasswordResetToken(passwordDto.getToken());
 
         if(result != null) {
@@ -88,6 +95,7 @@ public class PasswordResetController {
             return "redirect:/login";
         }
 
+        //  Para buscar o usuário
         Optional<Usuario> user = usuarioService.getUserByPasswordResetToken(passwordDto.getToken());
         if(user.isPresent()) {
             usuarioService.changeUserPassword(user.get(), passwordDto.getNewPassword());
