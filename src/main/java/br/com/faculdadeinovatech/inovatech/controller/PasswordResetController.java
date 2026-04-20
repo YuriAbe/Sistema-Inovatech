@@ -33,7 +33,7 @@ public class PasswordResetController {
     // Exibe a página para solicitar a recuperação de senha
     @GetMapping("/forgotPassword" )
     public String showForgotPasswordPage() {
-        return "forgotPassword"; // Nome da sua view forgot-password.html
+        return "forgotPassword"; // Nome da sua view forgotPassword.html
     }
 
     // Lida com a solicitação de recuperação de senha (envio do e-mail)
@@ -50,7 +50,7 @@ public class PasswordResetController {
 
         Usuario user = userOptional.get();
         String token = UUID.randomUUID().toString();
-        usuarioService.createPasswordResetTokenForUser(user, token);
+        usuarioService.createOrUpdatePasswordResetTokenForUser(user, token);
 
         String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         String resetUrl = appUrl + "/changePassword?token=" + token;
@@ -74,7 +74,7 @@ public class PasswordResetController {
             return "redirect:/login"; // Redireciona para o login com mensagem de erro
         } else {
             model.addAttribute("token", token);
-            return "updatePassword"; // Nome da sua view (ex: updatePassword.html)
+            return "updatePassword"; // Nome da sua view updatePassword.html
         }
     }
 

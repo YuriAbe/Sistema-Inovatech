@@ -11,7 +11,7 @@
     <h1 style="text-align: center;">Acesso ao Sistema Inovatech</h1>
 
     <form th:action="@{/login}" method="post">
-        
+
         <label>Usuário:</label>
         <input type="text" name="username">
         <br>
@@ -20,11 +20,15 @@
         <br>
 
         <button type="submit">Entrar</button>
-        
+
     </form>
 
     <p th:if="${param.error}">Login inválido</p>
     <p th:if="${param.logout}">Logout efetuado</p>
+
+    <h3 style="text-align: center;">
+        <a th:href="@{/forgotPassword}">Esqueceu sua senha?</a>
+    </h3>
 </body>
 
 </html>

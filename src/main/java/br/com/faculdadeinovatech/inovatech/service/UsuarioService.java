@@ -1,6 +1,7 @@
 package br.com.faculdadeinovatech.inovatech.service;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,38 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // Métodos para criar e validar tokens de redefinição de senha, e para alterar a senha do usuário.
+    // Métodos para criar e validar tokens de redefinição de senha, e para alterar a
+    // senha do usuário.
     public Optional<Usuario> findByLoginUsuario(String loginUsuario) {
         return usuarioRepository.findByLoginUsuario(loginUsuario);
     }
 
-    public void createPasswordResetTokenForUser(Usuario usuario, String token) {
-        PasswordResetToken myToken = new PasswordResetToken(token, usuario);
-        passwordResetTokenRepository.save(myToken);
+    // Método CRIAR modificado para CRIAR ou ATUALIZAR o token
+    public void createOrUpdatePasswordResetTokenForUser(Usuario usuario, String token) {
+        
+        // 1. Tenta encontrar um token existente para o usuário
+        PasswordResetToken existingToken = passwordResetTokenRepository.findByUsuario(usuario);
+
+        if (existingToken != null) {
+            // 2. Se um token existe, atualiza-o
+            existingToken.setToken(token);
+            existingToken.setExpiryDate(calculateExpiryDate(PasswordResetToken.EXPIRATION)); // Recalcula a data de
+                                                                                             // expiração
+            passwordResetTokenRepository.save(existingToken);
+        } else {
+            // 3. Se não existe, cria um novo token
+            PasswordResetToken newToken = new PasswordResetToken(token, usuario);
+            passwordResetTokenRepository.save(newToken);
+        }
+    }
+
+    // Método auxiliar para calcular a data de expiração (pode ser movido para a
+    // entidade se preferir)
+    private Date calculateExpiryDate(int expiryTimeInMinutes) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(new Date().getTime());
+        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+        return new Date(cal.getTime().getTime());
     }
 
     public String validatePasswordResetToken(String token) {
@@ -46,7 +71,7 @@ public class UsuarioService {
 
         return !isTokenFound(passToken) ? "invalidToken"
                 : isTokenExpired(passToken) ? "expired"
-                : null;
+                        : null;
     }
 
     private boolean isTokenFound(PasswordResetToken passToken) {
