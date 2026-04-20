@@ -1,0 +1,49 @@
+package br.com.faculdadeinovatech.inovatech.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Aluno {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer idAluno;
+    
+    @Column(nullable = false, length = 40)
+    private String nomeAluno;
+        
+    @Column(length = 30)
+    private String emailAluno;
+    
+    @Column(nullable = false, length = 11)
+    private String telefoneAluno;
+    
+    @Column(nullable = false, length = 11)
+    private String cpfAluno;
+    
+    @Column(nullable = false, length = 100)
+    private String enderecoAluno;
+    
+    @Column(nullable = false, length = 30)
+    private String cidadeAluno;   
+
+    @ManyToOne // Muitos alunos para Um curso
+    @JoinColumn(name = "idCurso_fk")
+    private Curso curso;
+    
+}
+

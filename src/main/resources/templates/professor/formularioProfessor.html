@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Formulário do Professor </title>
+</head>
+
+<body>
+    <h1>Formulário de Professor</h1>
+
+    <form th:action="@{/professores/salvar}" method="post" th:object="${professor}">
+
+        <input type="hidden" name="idProfessor" th:field="*{idProfessor}" />
+
+        <label for="nomeProfessor">Nome:</label>
+        <input type="text" name="nomeProfessor" th:field="*{nomeProfessor}" required /><br><br>
+
+        <label for="telefoneProfessor">Telefone:</label>
+        <input type="text" name="telefoneProfessor" th:field="*{telefoneProfessor}" required /><br><br>
+
+        <label for="cpfProfessor">CPF:</label>
+        <input type="text" name="cpfProfessor" th:field="*{cpfProfessor}" required /><br><br>
+
+        <label for="graduacaoProfessor">Graduação:</label>
+        <input type="text" name="graduacaoProfessor" th:field="*{graduacaoProfessor}" required /><br><br>
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+
+
+</html>

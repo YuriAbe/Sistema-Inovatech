@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Formulário da Disciplina </title>
+</head>
+
+<body>
+    <h1>Formulário de Disciplina</h1>
+
+    <form th:action="@{/disciplinas/salvar}" method="post" th:object="${disciplina}">
+
+        <input type="hidden" name="idDisciplina" th:field="*{idDisciplina}" />
+
+        <label for="nomeDisciplina">Nome:</label>
+        <input type="text" name="nomeDisciplina" th:field="*{nomeDisciplina}" required /><br><br>
+
+        <label for="siglaDisciplina">Sigla:</label>
+        <input type="text" name="siglaDisciplina" th:field="*{siglaDisciplina}" /><br><br>
+
+        <label for="cargaHorariaDisciplina">Carga Horária:</label>
+        <input type="number" name="cargaHorariaDisciplina" th:field="*{cargaHorariaDisciplina}" /><br><br>
+
+        <label for="curso">Curso:</label>
+        <select th:field="*{curso}">
+            <option value="" disabled selected> Selecione um curso</option>
+            <option th:each="curso : ${cursos}" th:value="${curso.idCurso}" th:text="${curso.nomeCurso}"></option>
+        </select><br><br>
+
+        <label for="professor">Professor:</label>
+        <select th:field="*{professor}">
+            <option value="" disabled selected> Selecione um professor</option>
+            <option th:each="professor : ${professores}" th:value="${professor.idProfessor}" th:text="${professor.nomeProfessor}"></option>
+        </select><br><br>
+
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+
+
+</html>

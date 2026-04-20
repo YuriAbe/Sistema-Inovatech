@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Formulário do Aluno </title>
+</head>
+
+<body>
+    <h1>Formulário de Aluno</h1>
+
+    <form th:action="@{/alunos/salvar}" method="post" th:object="${aluno}">
+
+        <input type="hidden" name="idAluno" th:field="*{idAluno}" />
+
+        <label for="nomeAluno">Nome:</label>
+        <input type="text" name="nomeAluno" th:field="*{nomeAluno}" required /><br><br>
+
+        <label for="emailAluno">E-mail:</label>
+        <input type="text" name="emailAluno" th:field="*{emailAluno}" /><br><br>
+
+        <label for="telefoneAluno">Telefone:</label>
+        <input type="text" name="telefoneAluno" th:field="*{telefoneAluno}" required /><br><br>
+
+        <label for="cpfAluno">CPF:</label>
+        <input type="text" name="cpfAluno" th:field="*{cpfAluno}" required /><br><br>
+
+        <label for="cidadeAluno">Cidade:</label>
+        <input type="text" name="cidadeAluno" th:field="*{cidadeAluno}" required /><br><br>
+
+        <label for="enderecoAluno">Endereço:</label>
+        <input type="text" name="enderecoAluno" th:field="*{enderecoAluno}" required /><br><br>
+
+        <label for="curso">Curso:</label>
+        <select th:field="*{curso}">
+            <option value="" disabled selected> Selecione um curso</option>
+            <option th:each="curso : ${cursos}" th:value="${curso.idCurso}" th:text="${curso.nomeCurso}"></option>
+        </select><br><br>
+            
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+
+
+</html>

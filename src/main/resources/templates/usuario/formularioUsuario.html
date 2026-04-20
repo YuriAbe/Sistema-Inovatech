@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Cadastro de Usuário</h1>
+
+    <form th:action="@{/usuarios/salvar}" method="post" th:object="${usuario}">
+        <input type="hidden" name="idUsuario" th:field="*{idUsuario}" />
+
+        <label for="nomeUsuario">Nome:</label>
+        <input type="text" name="nomeUsuario" th:field="*{nomeUsuario}" placeholder="Fulano de Tau" required /><br><br>
+
+        <label for="cpfUsuario">CPF:</label>
+        <input type="text" name="cpfUsuario" th:field="*{cpfUsuario}" placeholder="Digite seu CPF" required /><br><br>
+
+        <label for="loginUsuario">Login: </label>
+        <input type="text" name="loginUsuario" th:field="*{loginUsuario}" placeholder="Digite seu email" required /><br><br>
+
+        <label for="senhaUsuario">Senha:</label>
+        <input type="password" name="senhaUsuario" th:field="*{senhaUsuario}" placeholder="Digite a sua senha" required /><br><br>
+
+        <button type="submit">Salvar Usuario</button>
+    </form>
+</body>
+
+</html>

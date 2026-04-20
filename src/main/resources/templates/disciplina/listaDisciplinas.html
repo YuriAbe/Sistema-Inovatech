@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Disciplinas</title>
+</head>
+
+<body>
+    <h1>Lista de Disciplinas</h1>
+    <a th:href="@{/disciplinas/criar}">Adicionar Nova Disciplina</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <td>Nome:</td>
+                <td>Sigla:</td>
+                <td>Carga Horária:</td>
+                <td>Curso:</td>
+                <td>Professor:</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="disciplina : ${disciplinas}">
+                <td th:text="${disciplina.nomeDisciplina}"></td>
+                <td th:text="${disciplina.siglaDisciplina}"></td>
+                <td th:text="${disciplina.cargaHorariaDisciplina}"></td>
+                <td th:text="${disciplina.curso.nomeCurso}"></td>
+                <td th:text="${disciplina.professor.nomeProfessor}"></td>
+                <td>
+                    <a th:href="@{/disciplinas/editar/{id}(id=${disciplina.idDisciplina})}">Editar</a>
+                    <a th:href="@{/disciplinas/excluir/{id}(id=${disciplina.idDisciplina})}">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
