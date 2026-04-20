@@ -97,4 +97,14 @@ public class UsuarioService {
     public void deletePasswordResetToken(Usuario usuario) {
         passwordResetTokenRepository.deleteByUsuario(usuario);
     }
+
+    public Optional<PasswordResetToken> validarToken(String token) {
+        PasswordResetToken prt = passwordResetTokenRepository.findByToken(token);
+
+        if (prt == null || prt.getExpiryDate().before(new Date())) {
+            return Optional.empty();
+        }
+
+        return Optional.of(prt);
+    }
 }

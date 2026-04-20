@@ -31,7 +31,7 @@ public class PasswordResetController {
     private MessageSource messages;
 
     // Exibe a página para solicitar a recuperação de senha
-    @GetMapping("/forgotPassword" )
+    @GetMapping("/forgotPassword")
     public String showForgotPasswordPage() {
         return "forgotPassword"; // Nome da sua view forgotPassword.html
     }
@@ -44,7 +44,8 @@ public class PasswordResetController {
 
         Optional<Usuario> userOptional = usuarioService.findByLoginUsuario(userEmail);
         if (userOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", messages.getMessage("message.userNotFound", null, Locale.getDefault()));
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    messages.getMessage("message.userNotFound", null, Locale.getDefault()));
             return "redirect:/forgotPassword";
         }
 
@@ -52,26 +53,27 @@ public class PasswordResetController {
         String token = UUID.randomUUID().toString();
         usuarioService.createOrUpdatePasswordResetTokenForUser(user, token);
 
-        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                + request.getContextPath();
         String resetUrl = appUrl + "/changePassword?token=" + token;
         String message = messages.getMessage("message.resetPassword", null, Locale.getDefault()) + "\r\n" + resetUrl;
 
         emailService.sendEmail(user.getLoginUsuario(), "Redefinição de Senha", message);
 
-        redirectAttributes.addFlashAttribute("successMessage", messages.getMessage("message.resetPasswordEmailSent", null, Locale.getDefault()));
+        redirectAttributes.addFlashAttribute("successMessage",
+                messages.getMessage("message.resetPasswordEmailSent", null, Locale.getDefault()));
         return "redirect:/forgotPassword";
     }
 
     // Exibe a página para redefinir a senha com o token
     @GetMapping("/changePassword")
     public String showChangePasswordPage(Locale locale, Model model, @RequestParam("token") String token,
-                                         RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) {
+
         String result = usuarioService.validatePasswordResetToken(token);
 
         if (result != null) {
-            String message = messages.getMessage("auth.message." + result, null, locale);
-            redirectAttributes.addFlashAttribute("errorMessage", message);
-            return "redirect:/login"; // Redireciona para o login com mensagem de erro
+            return "redirect:/tokenExpired"; // Redireciona para a view de erro Token Expirado
         } else {
             model.addAttribute("token", token);
             return "updatePassword"; // Nome da sua view updatePassword.html
@@ -90,25 +92,32 @@ public class PasswordResetController {
         // Para validar token
         String result = usuarioService.validatePasswordResetToken(passwordDto.getToken());
 
-        if(result != null) {
-            redirectAttributes.addFlashAttribute("errorMessage", messages.getMessage("auth.message." + result, null, locale));
-            return "redirect:/login";
+        if (result != null) {
+            return "redirect:/tokenExpired"; // Redireciona para a view de erro Token Expirado
         }
 
-        //  Para buscar o usuário
+        // Para buscar o usuário
         Optional<Usuario> user = usuarioService.getUserByPasswordResetToken(passwordDto.getToken());
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             // Para atualizar a senha
             usuarioService.changeUserPassword(user.get(), passwordDto.getNewPassword());
 
             // Para deletar o token após o uso
             usuarioService.deletePasswordResetToken(user.get());
 
-            redirectAttributes.addFlashAttribute("successMessage", messages.getMessage("message.resetPasswordSuc", null, locale));
+            redirectAttributes.addFlashAttribute("successMessage",
+                    messages.getMessage("message.resetPasswordSuc", null, locale));
             return "redirect:/login";
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", messages.getMessage("auth.message.invalid", null, locale));
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    messages.getMessage("auth.message.invalid", null, locale));
             return "redirect:/login";
         }
+    }
+
+    // Exibe a página de Token Expirado
+    @GetMapping("/tokenExpired")
+    public String tokenExpiredPage() {
+        return "tokenExpired";
     }
 }

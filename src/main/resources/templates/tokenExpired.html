@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Token Expirado</title>
+
+    <!-- Redireciona em 5 segundos -->
+    <meta http-equiv="refresh" content="5;url=/login">
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f5f5f5;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <h2>⚠️ Link inválido ou expirado</h2>
+        <p>Solicite uma nova redefinição de senha.</p>
+        <p>Redirecionando para o login em 5 segundos...</p>
+    </div>
+
+</body>
+
+</html>

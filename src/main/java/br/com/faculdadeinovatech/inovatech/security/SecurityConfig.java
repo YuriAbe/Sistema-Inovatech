@@ -27,10 +27,11 @@ public class SecurityConfig {
                                                                 "/usuarios/criar",
                                                                 "/usuarios/salvar",
                                                                 "/usuario/formularioUsuario.html",
-                                                                "/forgotPassword", 
-                                                                "/resetPassword", 
+                                                                "/forgotPassword",
+                                                                "/resetPassword",
                                                                 "/changePassword",
-                                                                "/updatePassword")
+                                                                "/updatePassword",
+                                                                "/tokenExpired")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
 
