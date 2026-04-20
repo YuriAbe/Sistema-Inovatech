@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.faculdadeinovatech.inovatech.entity.PasswordResetToken;
 import br.com.faculdadeinovatech.inovatech.entity.Usuario;
@@ -40,7 +41,7 @@ public class UsuarioService {
 
     // Método CRIAR modificado para CRIAR ou ATUALIZAR o token
     public void createOrUpdatePasswordResetTokenForUser(Usuario usuario, String token) {
-        
+
         // 1. Tenta encontrar um token existente para o usuário
         PasswordResetToken existingToken = passwordResetTokenRepository.findByUsuario(usuario);
 
@@ -92,4 +93,8 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
+    @Transactional
+    public void deletePasswordResetToken(Usuario usuario) {
+        passwordResetTokenRepository.deleteByUsuario(usuario);
+    }
 }

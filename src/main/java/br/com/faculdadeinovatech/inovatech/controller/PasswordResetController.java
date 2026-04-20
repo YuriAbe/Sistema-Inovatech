@@ -98,7 +98,12 @@ public class PasswordResetController {
         //  Para buscar o usuário
         Optional<Usuario> user = usuarioService.getUserByPasswordResetToken(passwordDto.getToken());
         if(user.isPresent()) {
+            // Para atualizar a senha
             usuarioService.changeUserPassword(user.get(), passwordDto.getNewPassword());
+
+            // Para deletar o token após o uso
+            usuarioService.deletePasswordResetToken(user.get());
+
             redirectAttributes.addFlashAttribute("successMessage", messages.getMessage("message.resetPasswordSuc", null, locale));
             return "redirect:/login";
         } else {
