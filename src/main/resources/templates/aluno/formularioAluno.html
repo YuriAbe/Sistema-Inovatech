@@ -1,47 +1,101 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Formulário do Aluno </title>
+<head th:replace="~{fragments/layout :: head('Cadastro de Aluno — Inovatech', 'Cadastro de alunos da instituição.', 'cadastro aluno, inovatech')}">
 </head>
 
 <body>
-    <h1>Formulário de Aluno</h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('alunos')}"></header>
 
-    <form th:action="@{/alunos/salvar}" method="post" th:object="${aluno}">
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container" style="max-width: 760px;">
 
-        <input type="hidden" name="idAluno" th:field="*{idAluno}" />
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/alunos/listar}">Alunos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:text="${aluno.idAluno != null} ? 'Editar aluno' : 'Novo aluno'">Novo aluno</li>
+                </ol>
+            </nav>
 
-        <label for="nomeAluno">Nome:</label>
-        <input type="text" name="nomeAluno" th:field="*{nomeAluno}" required /><br><br>
+            <div class="inv-card p-4 p-md-5">
+                <h1 class="h3 mb-4" th:text="${aluno.idAluno != null} ? 'Editar aluno' : 'Cadastro de aluno'">Cadastro de aluno</h1>
 
-        <label for="emailAluno">E-mail:</label>
-        <input type="text" name="emailAluno" th:field="*{emailAluno}" /><br><br>
+                <form th:action="@{/alunos/salvar}" method="post" th:object="${aluno}">
+                    <input type="hidden" th:field="*{idAluno}">
 
-        <label for="telefoneAluno">Telefone:</label>
-        <input type="text" name="telefoneAluno" th:field="*{telefoneAluno}" required /><br><br>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="nomeAluno" class="form-label fw-semibold">Nome</label>
+                            <input type="text" class="form-control" id="nomeAluno" th:field="*{nomeAluno}"
+                                th:classappend="${#fields.hasErrors('nomeAluno')} ? 'is-invalid'"
+                                required maxlength="40" placeholder="Nome completo do aluno">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('nomeAluno')}" th:errors="*{nomeAluno}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cpfAluno" class="form-label fw-semibold">CPF</label>
+                            <input type="text" class="form-control" id="cpfAluno" th:field="*{cpfAluno}"
+                                th:classappend="${#fields.hasErrors('cpfAluno')} ? 'is-invalid'"
+                                required maxlength="11" placeholder="Somente números"
+                                data-mask="cpf" data-validate="cpf" inputmode="numeric">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('cpfAluno')}" th:errors="*{cpfAluno}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="emailAluno" class="form-label fw-semibold">E-mail</label>
+                            <input type="email" class="form-control" id="emailAluno" th:field="*{emailAluno}"
+                                th:classappend="${#fields.hasErrors('emailAluno')} ? 'is-invalid'"
+                                maxlength="30" placeholder="aluno@email.com">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('emailAluno')}" th:errors="*{emailAluno}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefoneAluno" class="form-label fw-semibold">Telefone</label>
+                            <input type="text" class="form-control" id="telefoneAluno" th:field="*{telefoneAluno}"
+                                th:classappend="${#fields.hasErrors('telefoneAluno')} ? 'is-invalid'"
+                                required maxlength="11" placeholder="Somente números (DDD + número)"
+                                data-mask="telefone" inputmode="numeric">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('telefoneAluno')}" th:errors="*{telefoneAluno}"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="enderecoAluno" class="form-label fw-semibold">Endereço</label>
+                            <input type="text" class="form-control" id="enderecoAluno" th:field="*{enderecoAluno}"
+                                th:classappend="${#fields.hasErrors('enderecoAluno')} ? 'is-invalid'"
+                                required maxlength="100" placeholder="Rua, número, bairro">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('enderecoAluno')}" th:errors="*{enderecoAluno}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cidadeAluno" class="form-label fw-semibold">Cidade</label>
+                            <input type="text" class="form-control" id="cidadeAluno" th:field="*{cidadeAluno}"
+                                th:classappend="${#fields.hasErrors('cidadeAluno')} ? 'is-invalid'"
+                                required maxlength="30" placeholder="Nome da cidade">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('cidadeAluno')}" th:errors="*{cidadeAluno}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="curso" class="form-label fw-semibold">Curso</label>
+                            <select class="form-select" id="curso" name="curso">
+                                <option value="">Selecione um curso</option>
+                                <option th:each="c : ${cursos}" th:value="${c.idCurso}" th:text="${c.nomeCurso}"
+                                    th:selected="${aluno.curso != null and aluno.curso.idCurso == c.idCurso}"></option>
+                            </select>
+                        </div>
+                    </div>
 
-        <label for="cpfAluno">CPF:</label>
-        <input type="text" name="cpfAluno" th:field="*{cpfAluno}" required /><br><br>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Salvar
+                        </button>
+                        <a class="btn btn-outline-secondary" th:href="@{/alunos/listar}">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
-        <label for="cidadeAluno">Cidade:</label>
-        <input type="text" name="cidadeAluno" th:field="*{cidadeAluno}" required /><br><br>
-
-        <label for="enderecoAluno">Endereço:</label>
-        <input type="text" name="enderecoAluno" th:field="*{enderecoAluno}" required /><br><br>
-
-        <label for="curso">Curso:</label>
-        <select th:field="*{curso}">
-            <option value="" disabled selected> Selecione um curso</option>
-            <option th:each="curso : ${cursos}" th:value="${curso.idCurso}" th:text="${curso.nomeCurso}"></option>
-        </select><br><br>
-            
-
-        <button type="submit">Salvar</button>
-    </form>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+    <script th:src="@{/js/validacao.js}"></script>
 </body>
-
 
 </html>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,20 @@ public class PedidoController {
         pedidoService.save(pedido);
 
         return "Pedido salvo com sucesso!";
+    }
+
+    // Listagem dos pedidos realizados
+    @GetMapping("/listar")
+    public String listar(Model model) {
+        model.addAttribute("pedidos", pedidoService.listarTodosComItens());
+        return "pedido/listaPedidos";
+    }
+
+    // Exclusão de um pedido
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Integer id) {
+        pedidoService.deleteById(id);
+        return "redirect:/pedidos/listar";
     }
 
     // Abrir a tela de cadastro

@@ -1,34 +1,79 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Formulário do Professor </title>
+<head th:replace="~{fragments/layout :: head('Cadastro de Professor — Inovatech', 'Cadastro de professores da instituição.', 'cadastro professor, inovatech')}">
 </head>
 
 <body>
-    <h1>Formulário de Professor</h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('professores')}"></header>
 
-    <form th:action="@{/professores/salvar}" method="post" th:object="${professor}">
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container" style="max-width: 760px;">
 
-        <input type="hidden" name="idProfessor" th:field="*{idProfessor}" />
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/professores/listar}">Professores</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:text="${professor.idProfessor != null} ? 'Editar professor' : 'Novo professor'">Novo professor</li>
+                </ol>
+            </nav>
 
-        <label for="nomeProfessor">Nome:</label>
-        <input type="text" name="nomeProfessor" th:field="*{nomeProfessor}" required /><br><br>
+            <div class="inv-card p-4 p-md-5">
+                <h1 class="h3 mb-4" th:text="${professor.idProfessor != null} ? 'Editar professor' : 'Cadastro de professor'">Cadastro de professor</h1>
 
-        <label for="telefoneProfessor">Telefone:</label>
-        <input type="text" name="telefoneProfessor" th:field="*{telefoneProfessor}" required /><br><br>
+                <form th:action="@{/professores/salvar}" method="post" th:object="${professor}">
+                    <input type="hidden" th:field="*{idProfessor}">
 
-        <label for="cpfProfessor">CPF:</label>
-        <input type="text" name="cpfProfessor" th:field="*{cpfProfessor}" required /><br><br>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="nomeProfessor" class="form-label fw-semibold">Nome</label>
+                            <input type="text" class="form-control" id="nomeProfessor" th:field="*{nomeProfessor}"
+                                th:classappend="${#fields.hasErrors('nomeProfessor')} ? 'is-invalid'"
+                                required maxlength="40" placeholder="Nome completo do professor">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('nomeProfessor')}" th:errors="*{nomeProfessor}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cpfProfessor" class="form-label fw-semibold">CPF</label>
+                            <input type="text" class="form-control" id="cpfProfessor" th:field="*{cpfProfessor}"
+                                th:classappend="${#fields.hasErrors('cpfProfessor')} ? 'is-invalid'"
+                                required maxlength="11" placeholder="Somente números"
+                                data-mask="cpf" data-validate="cpf" inputmode="numeric">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('cpfProfessor')}" th:errors="*{cpfProfessor}"></div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="telefoneProfessor" class="form-label fw-semibold">Telefone</label>
+                            <input type="text" class="form-control" id="telefoneProfessor" th:field="*{telefoneProfessor}"
+                                th:classappend="${#fields.hasErrors('telefoneProfessor')} ? 'is-invalid'"
+                                required maxlength="11" placeholder="Somente números (DDD + número)"
+                                data-mask="telefone" inputmode="numeric">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('telefoneProfessor')}" th:errors="*{telefoneProfessor}"></div>
+                        </div>
+                        <div class="col-md-7">
+                            <label for="graduacaoProfessor" class="form-label fw-semibold">Graduação</label>
+                            <input type="text" class="form-control" id="graduacaoProfessor" th:field="*{graduacaoProfessor}"
+                                th:classappend="${#fields.hasErrors('graduacaoProfessor')} ? 'is-invalid'"
+                                required maxlength="200" placeholder="Ex.: Bacharel em Ciência da Computação">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('graduacaoProfessor')}" th:errors="*{graduacaoProfessor}"></div>
+                        </div>
+                    </div>
 
-        <label for="graduacaoProfessor">Graduação:</label>
-        <input type="text" name="graduacaoProfessor" th:field="*{graduacaoProfessor}" required /><br><br>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Salvar
+                        </button>
+                        <a class="btn btn-outline-secondary" th:href="@{/professores/listar}">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
-        <button type="submit">Salvar</button>
-    </form>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+    <script th:src="@{/js/validacao.js}"></script>
 </body>
-
 
 </html>

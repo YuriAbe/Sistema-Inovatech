@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/layout :: head('Alunos — Painel Inovatech', 'Gestão de alunos da instituição.', 'gestão alunos, inovatech')}">
+<head th:replace="~{fragments/layout :: head('Pedidos — Painel Inovatech', 'Pedidos realizados na loja da APM.', 'pedidos, inovatech, APM')}">
 </head>
 
 <body>
     <a th:replace="~{fragments/layout :: skipLink}"></a>
-    <header th:replace="~{fragments/layout :: navbarAdmin('alunos')}"></header>
+    <header th:replace="~{fragments/layout :: navbarAdmin('pedidos')}"></header>
 
     <main id="conteudo" class="py-4 py-lg-5">
         <div class="container">
@@ -14,17 +14,17 @@
             <nav aria-label="Trilha de navegação">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Alunos</li>
+                    <li class="breadcrumb-item active" aria-current="page">Pedidos</li>
                 </ol>
             </nav>
 
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                 <div>
-                    <h1 class="h3 mb-0">Alunos</h1>
-                    <p class="text-muted-inv mb-0"><span th:text="${#lists.size(alunos)}">0</span> aluno(s) cadastrado(s)</p>
+                    <h1 class="h3 mb-0">Pedidos</h1>
+                    <p class="text-muted-inv mb-0"><span th:text="${#lists.size(pedidos)}">0</span> pedido(s) realizado(s)</p>
                 </div>
-                <a class="btn btn-primary" th:href="@{/alunos/criar}">
-                    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Novo aluno
+                <a class="btn btn-primary" th:href="@{/pedidos/criar}">
+                    <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Novo pedido
                 </a>
             </div>
 
@@ -42,45 +42,39 @@
             <div class="inv-card p-0 overflow-hidden">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                        <caption class="visually-hidden">Lista de alunos cadastrados</caption>
+                        <caption class="visually-hidden">Lista de pedidos realizados</caption>
                         <thead class="table-light">
                             <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col">E-mail</th>
-                                <th scope="col">Telefone</th>
-                                <th scope="col">CPF</th>
-                                <th scope="col">Cidade</th>
-                                <th scope="col">Curso</th>
+                                <th scope="col">Pedido</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Aluno</th>
+                                <th scope="col">Itens</th>
+                                <th scope="col">Total</th>
                                 <th scope="col" class="text-end">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="aluno : ${alunos}">
-                                <td class="fw-semibold" th:text="${aluno.nomeAluno}">—</td>
-                                <td th:text="${aluno.emailAluno}">—</td>
-                                <td th:text="${aluno.telefoneAluno}">—</td>
-                                <td th:text="${aluno.cpfAluno}">—</td>
-                                <td th:text="${aluno.cidadeAluno}">—</td>
+                            <tr th:each="pedido : ${pedidos}">
+                                <td class="fw-semibold" th:text="'#' + ${pedido.idPedido}">#1</td>
+                                <td th:text="${pedido.dataPedido != null} ? ${#temporals.format(pedido.dataPedido, 'dd/MM/yyyy')} : '—'">—</td>
+                                <td th:text="${pedido.aluno != null} ? ${pedido.aluno.nomeAluno} : '—'">—</td>
                                 <td>
                                     <span class="badge text-bg-light"
-                                        th:text="${aluno.curso != null ? aluno.curso.nomeCurso : 'Sem curso'}">—</span>
+                                        th:text="${pedido.itens != null ? #lists.size(pedido.itens) : 0} + ' item(ns)'">0 item(ns)</span>
                                 </td>
+                                <td class="fw-semibold"
+                                    th:text="'R$ ' + ${#numbers.formatDecimal(pedido.totalPedido, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</td>
                                 <td class="text-end text-nowrap">
-                                    <a class="btn btn-sm btn-outline-primary"
-                                        th:href="@{/alunos/editar/{id}(id=${aluno.idAluno})}"
-                                        th:aria-label="'Editar ' + ${aluno.nomeAluno}">
-                                        <i class="bi bi-pencil" aria-hidden="true"></i>
-                                    </a>
                                     <a class="btn btn-sm btn-outline-danger"
-                                        th:href="@{/alunos/excluir/{id}(id=${aluno.idAluno})}"
-                                        th:aria-label="'Excluir ' + ${aluno.nomeAluno}"
-                                        onclick="return confirm('Deseja realmente excluir este aluno?');">
+                                        th:href="@{/pedidos/excluir/{id}(id=${pedido.idPedido})}"
+                                        th:aria-label="'Excluir pedido ' + ${pedido.idPedido}"
+                                        onclick="return confirm('Deseja realmente excluir este pedido?');">
                                         <i class="bi bi-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(alunos)}">
-                                <td colspan="7" class="text-center text-muted-inv py-4">Nenhum aluno cadastrado.</td>
+                            <tr th:if="${#lists.isEmpty(pedidos)}">
+                                <td colspan="6" class="text-center text-muted-inv py-4">Nenhum pedido realizado.</td>
                             </tr>
                         </tbody>
                     </table>

@@ -7,7 +7,8 @@ public record ProdutoResponseDTO(
         String descricaoProduto,
         Double valorProduto,
         String marcaProduto,
-        CategoriaResponseDTO categoria // Retornamos o DTO da categoria, não a Entity
+        CategoriaResponseDTO categoria, // Retornamos o DTO da categoria, não a Entity
+        String imagemUrl
 ) {
     // Método utilitário para converter de Entity para DTO
     public static ProdutoResponseDTO fromEntity(Produto produto) {
@@ -16,7 +17,8 @@ public record ProdutoResponseDTO(
                 produto.getDescricaoProduto(),
                 produto.getValorProduto(),
                 produto.getMarcaProduto(),
-                CategoriaResponseDTO.fromEntity(produto.getCategoria())
+                CategoriaResponseDTO.fromEntity(produto.getCategoria()),
+                produto.getImagemUrl()
         );
     }
 }

@@ -1,33 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    </meta>
+    <meta charset="UTF-8" />
     <title>Relatório de Alunos</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        body { font-family: Helvetica, Arial, sans-serif; color: #1c2733; font-size: 12px; }
+        .cabecalho { border-bottom: 3px solid #13315c; padding-bottom: 10px; margin-bottom: 18px; }
+        .cabecalho h1 { color: #13315c; font-size: 20px; margin: 0; }
+        .cabecalho p { color: #5b6b7b; margin: 4px 0 0; }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #13315c; color: #ffffff; text-align: left;
+            padding: 8px 10px; font-size: 12px;
+        }
+        tbody td { padding: 7px 10px; border-bottom: 1px solid #e3e8ee; }
+        tbody tr:nth-child(even) td { background: #f6f8fb; }
+        .vazio { text-align: center; color: #5b6b7b; padding: 16px; }
+    </style>
 </head>
 
 <body>
-    <h2>Relatório de Alunos</h2>
-    <table border="1">
+    <div class="cabecalho">
+        <h1>Inovatech — Relatório de Alunos</h1>
+        <p>Associação de Pais e Mestres</p>
+    </div>
+
+    <table>
         <thead>
             <tr>
-                <th>Nome:</th>
-                <th>E-mail:</th>
-                <th>Telefone:</th>
-                <th>Cidade:</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Cidade</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="aluno : ${alunos}">
-                <td th:text="${aluno.nomeAluno}"></td>
-                <td th:text="${aluno.emailAluno}"></td>
-                <td th:text="${aluno.telefoneAluno}"></td>
-                <td th:text="${aluno.cidadeAluno}"></td>
+                <td th:text="${aluno.nomeAluno}">Nome</td>
+                <td th:text="${aluno.emailAluno}">E-mail</td>
+                <td th:text="${aluno.telefoneAluno}">Telefone</td>
+                <td th:text="${aluno.cidadeAluno}">Cidade</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(alunos)}">
+                <td class="vazio" colspan="4">Nenhum aluno cadastrado.</td>
             </tr>
         </tbody>
     </table>
-
 </body>
 
 </html>

@@ -61,16 +61,36 @@
                             <a class="nav-link" th:classappend="${ativo == 'produtos'} ? 'active'"
                                 th:href="@{/produtos}" th:attr="aria-current=${ativo == 'produtos'} ? 'page'">Produtos</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${#request.userPrincipal == null}">
                             <a class="nav-link" href="/#sobre">Sobre</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${#request.userPrincipal == null}">
                             <a class="nav-link" href="/#contato">Contato</a>
                         </li>
-                        <li class="nav-item ms-lg-2">
+                        <!-- Cart icon - shown when logged in -->
+                        <li class="nav-item" th:if="${#request.userPrincipal != null}">
+                            <a class="nav-link position-relative" th:classappend="${ativo == 'carrinho'} ? 'active'"
+                                th:href="@{/carrinho}">
+                                <i class="bi bi-cart3 fs-5" aria-hidden="true"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                    th:if="${carrinhoQtd != null and carrinhoQtd > 0}"
+                                    th:text="${carrinhoQtd}">0</span>
+                                <span class="visually-hidden">Carrinho</span>
+                            </a>
+                        </li>
+                        <!-- Not logged in: show login button -->
+                        <li class="nav-item ms-lg-2" th:if="${#request.userPrincipal == null}">
                             <a class="btn btn-gold btn-sm px-3" th:href="@{/login}">
                                 <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>Acessar sistema
                             </a>
+                        </li>
+                        <!-- Logged in: show logout button -->
+                        <li class="nav-item ms-lg-2" th:if="${#request.userPrincipal != null}">
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button class="btn btn-outline-light btn-sm px-3" type="submit">
+                                    <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>Sair
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -98,6 +118,8 @@
                         <li class="nav-item"><a class="nav-link" th:classappend="${ativo == 'professores'} ? 'active'" th:href="@{/professores/listar}">Professores</a></li>
                         <li class="nav-item"><a class="nav-link" th:classappend="${ativo == 'disciplinas'} ? 'active'" th:href="@{/disciplinas/listar}">Disciplinas</a></li>
                         <li class="nav-item"><a class="nav-link" th:classappend="${ativo == 'produtos'} ? 'active'" th:href="@{/produtos/listar}">Produtos</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${ativo == 'categorias'} ? 'active'" th:href="@{/categorias/listar}">Categorias</a></li>
+                        <li class="nav-item"><a class="nav-link" th:classappend="${ativo == 'pedidos'} ? 'active'" th:href="@{/pedidos/listar}">Pedidos</a></li>
                         <li class="nav-item"><a class="nav-link" th:classappend="${ativo == 'relatorios'} ? 'active'" th:href="@{/relatorios/alunos}">Relatórios</a></li>
                     </ul>
                     <form th:action="@{/logout}" method="post" class="d-flex">

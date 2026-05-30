@@ -24,9 +24,10 @@
             <div class="row g-4 g-lg-5">
                 <div class="col-lg-6">
                     <div class="inv-card overflow-hidden">
-                        <img class="w-100" style="aspect-ratio:4/3;object-fit:cover;"
-                            th:src="@{/images/produto-placeholder.svg}"
-                            th:alt="'Imagem do produto ' + ${produto.descricaoProduto}">
+                        <img class="w-100 produto-img-detail" style="aspect-ratio:4/3;object-fit:cover;"
+                            th:src="${produto.imagemUrl != null and !produto.imagemUrl.isEmpty()} ? ${produto.imagemUrl} : @{/images/produto-placeholder.svg}"
+                            th:alt="'Imagem do produto ' + ${produto.descricaoProduto}"
+                            onerror="this.src='/images/produto-placeholder.svg'">
                     </div>
                 </div>
 
@@ -43,9 +44,17 @@
                         th:text="'R$ ' + ${#numbers.formatDecimal(produto.valorProduto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</p>
 
                     <div class="d-flex flex-wrap gap-2 mb-4">
-                        <a class="btn btn-primary btn-lg" th:href="@{/pedidos/criar}">
-                            <i class="bi bi-cart-plus me-2" aria-hidden="true"></i>Adicionar ao pedido
-                        </a>
+                        <form th:action="@{/carrinho/adicionar}" method="post" class="d-inline">
+                            <input type="hidden" name="idProduto" th:value="${produto.idProduto}">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <label for="quantidade" class="form-label fw-semibold mb-0">Qtd:</label>
+                                <input type="number" id="quantidade" name="quantidade" value="1" min="1" max="99"
+                                       class="form-control" style="width:80px">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-cart-plus me-2" aria-hidden="true"></i>Adicionar ao carrinho
+                            </button>
+                        </form>
                         <a class="btn btn-outline-primary btn-lg" th:href="@{/produtos}">
                             <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Voltar à vitrine
                         </a>

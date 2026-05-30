@@ -5,6 +5,9 @@
 # O application.properties real é ignorado pelo Git (não versione senhas).
 # =========================================================
 
+# ---- Porta da aplicação ----
+server.port=8080
+
 # ---- Banco de dados PostgreSQL ----
 spring.datasource.url=jdbc:postgresql://localhost:5432/inovatech
 spring.datasource.username=postgres
@@ -17,6 +20,9 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=false
 spring.jpa.open-in-view=false
+
+# ---- Limpeza automática de tokens de senha expirados (todo dia à meia-noite) ----
+purge.cron.expression=0 0 0 * * ?
 
 # ---- Seed de dados de teste ----
 # O DataSeeder (CommandLineRunner) gera dados aleatórios na 1ª execução,

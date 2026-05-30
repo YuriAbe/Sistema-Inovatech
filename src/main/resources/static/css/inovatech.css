@@ -268,3 +268,75 @@ button:focus-visible,
 
 /* Tabela admin com cara mais limpa */
 .table > :not(caption) > * > * { vertical-align: middle; }
+
+/* ===== Validação de formulários ===== */
+.invalid-feedback {
+    font-size: 0.85rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* ===== Alertas de sucesso/erro ===== */
+.alert-success-custom {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 1px solid #28a745;
+    color: #155724;
+    border-radius: 0.5rem;
+}
+
+.alert-danger-custom {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border: 1px solid #dc3545;
+    color: #721c24;
+    border-radius: 0.5rem;
+}
+
+/* ===== Imagem do produto ===== */
+.produto-img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.produto-img-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+}
+
+.produto-img-detail {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 0.75rem;
+}
+
+.img-preview {
+    max-width: 200px;
+    max-height: 150px;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    border: 2px dashed #dee2e6;
+    margin-top: 0.5rem;
+}
+
+/* ===== Helper text ===== */
+.form-text-helper {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}

@@ -81,14 +81,22 @@
                     class="btn btn-sm btn-outline-secondary">Limpar filtros</a>
             </div>
 
+            <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${sucesso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <!-- ============ Grade de produtos ============ -->
             <div class="row g-4" th:if="${!produtos.isEmpty()}">
                 <div class="col-12 col-sm-6 col-lg-4" th:each="produto : ${produtos}">
                     <article class="inv-card overflow-hidden d-flex flex-column">
                         <a th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}"
                             tabindex="-1" aria-hidden="true">
-                            <img class="inv-produto-img" th:src="@{/images/produto-placeholder.svg}"
-                                th:alt="'Imagem do produto ' + ${produto.descricaoProduto}">
+                            <img class="inv-produto-img"
+                                th:src="${produto.imagemUrl != null and !produto.imagemUrl.isEmpty()} ? ${produto.imagemUrl} : @{/images/produto-placeholder.svg}"
+                                th:alt="'Imagem do produto ' + ${produto.descricaoProduto}"
+                                onerror="this.src='/images/produto-placeholder.svg'">
                         </a>
                         <div class="p-3 d-flex flex-column flex-grow-1">
                             <span class="badge text-bg-light align-self-start mb-2"
@@ -107,9 +115,13 @@
                                     th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}">
                                     <i class="bi bi-eye me-1" aria-hidden="true"></i>Detalhes
                                 </a>
-                                <a class="btn btn-primary btn-sm" th:href="@{/pedidos/criar}">
-                                    <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Adicionar ao pedido
-                                </a>
+                                <form th:action="@{/carrinho/adicionar}" method="post" class="d-grid">
+                                    <input type="hidden" name="idProduto" th:value="${produto.idProduto}">
+                                    <input type="hidden" name="quantidade" value="1">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Adicionar ao carrinho
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </article>
