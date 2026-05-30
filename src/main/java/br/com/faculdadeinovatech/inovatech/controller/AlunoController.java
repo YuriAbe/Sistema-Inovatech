@@ -5,15 +5,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.faculdadeinovatech.inovatech.entity.Aluno;
 import br.com.faculdadeinovatech.inovatech.service.AlunoService;
 import br.com.faculdadeinovatech.inovatech.service.CursoService;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/alunos")
@@ -29,41 +32,50 @@ public class AlunoController {
 
     // Método para salvar um aluno
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Aluno aluno) {
-        alunoService.save(aluno); // Salva o aluno
-        return "redirect:/alunos/listar"; // Redireciona para a página de listagem de alunos
+    public String salvar(@Valid @ModelAttribute Aluno aluno,
+                         BindingResult result,
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("cursos", cursoService.findAll());
+            return "aluno/formularioAluno";
+        }
+        alunoService.save(aluno);
+        redirectAttributes.addFlashAttribute("sucesso", "Aluno salvo com sucesso!");
+        return "redirect:/alunos/listar";
     }
 
     // Método para listar todos os alunos
     @GetMapping("/listar")
     public String listar(Model model) {
-        List<Aluno> alunos = alunoService.findAll(); // Obtém a lista de alunos;
-        model.addAttribute("alunos", alunos); // Adiciona a lista de alunos ao modelo
-        return "aluno/listaAlunos"; // Retorna a view para listar os alunos
+        List<Aluno> alunos = alunoService.findAll();
+        model.addAttribute("alunos", alunos);
+        return "aluno/listaAlunos";
     }
 
     // Método para abrir o formulário de cadastro de aluno
     @GetMapping("/criar")
     public String criarForm(Model model) {
-        model.addAttribute("aluno", new Aluno()); // Adiciona um novo aluno ao modelo
-        model.addAttribute("cursos", cursoService.findAll()); // Adiciona a lista de cursos ao modelo
-        return "aluno/formularioAluno"; // Retorna a view para o formulario de cadastro
+        model.addAttribute("aluno", new Aluno());
+        model.addAttribute("cursos", cursoService.findAll());
+        return "aluno/formularioAluno";
     }
 
     // Metodo para abrir o formulário de edição de aluno
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable Integer id, Model model) {
-        Aluno aluno = alunoService.findById(id); // Obtém aluno pelo ID
-        model.addAttribute("aluno", aluno); // Adiciona o aluno ao modelo
-        model.addAttribute("cursos", cursoService.findAll()); // Adiciona a lista de cursos ao modelo
-        return "aluno/formularioAluno"; // Retorna a view para o formulário de edição
+        Aluno aluno = alunoService.findById(id);
+        model.addAttribute("aluno", aluno);
+        model.addAttribute("cursos", cursoService.findAll());
+        return "aluno/formularioAluno";
     }
 
-    // Método para excluir um modelo
+    // Método para excluir um aluno
     @GetMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id) {
-        alunoService.deleteById(id); // Exclui o aluno direto pelo id
-        return "redirect:/alunos/listar"; // Redireciona para a página de listagem de alunos.
+    public String excluir(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        alunoService.deleteById(id);
+        redirectAttributes.addFlashAttribute("sucesso", "Aluno excluído com sucesso!");
+        return "redirect:/alunos/listar";
     }
 
 }

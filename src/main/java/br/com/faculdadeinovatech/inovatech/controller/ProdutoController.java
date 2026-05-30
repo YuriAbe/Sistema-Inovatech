@@ -7,12 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.faculdadeinovatech.inovatech.dto.ProdutoRequestDTO;
 import br.com.faculdadeinovatech.inovatech.dto.ProdutoResponseDTO;
+import br.com.faculdadeinovatech.inovatech.entity.Produto;
 import br.com.faculdadeinovatech.inovatech.service.CategoriaService;
 import br.com.faculdadeinovatech.inovatech.service.ProdutoService;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/produtos")
@@ -68,12 +71,6 @@ public class ProdutoController {
 
     // ===================== ÁREA ADMINISTRATIVA =====================
 
-    @PostMapping("/salvar")
-    public String salvar(@ModelAttribute ProdutoRequestDTO dto) {
-        produtoService.save(dto);
-        return "redirect:/produtos/listar";
-    }
-
     @GetMapping("/listar")
     public String listar(
             @RequestParam(defaultValue = "0") int page,
@@ -93,8 +90,36 @@ public class ProdutoController {
 
     @GetMapping("/criar")
     public String criarForm(Model model) {
-        model.addAttribute("produto", new ProdutoRequestDTO(null, null, null, null));
+        model.addAttribute("produto", new Produto());
         model.addAttribute("categorias", categoriaService.listarTodas());
         return "produto/formularioProduto";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("produto", produtoService.buscarEntity(id));
+        model.addAttribute("categorias", categoriaService.listarTodas());
+        return "produto/formularioProduto";
+    }
+
+    @PostMapping("/salvar")
+    public String salvar(@Valid @ModelAttribute Produto produto,
+                         BindingResult result,
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("categorias", categoriaService.listarTodas());
+            return "produto/formularioProduto";
+        }
+        produtoService.salvarEntity(produto);
+        redirectAttributes.addFlashAttribute("sucesso", "Produto salvo com sucesso!");
+        return "redirect:/produtos/listar";
+    }
+
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        produtoService.deleteById(id);
+        redirectAttributes.addFlashAttribute("sucesso", "Produto excluído com sucesso!");
+        return "redirect:/produtos/listar";
     }
 }

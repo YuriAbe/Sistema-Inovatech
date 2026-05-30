@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Cadastro de Categoria — Inovatech', 'Cadastro de categorias de produtos da APM.', 'cadastro categoria, inovatech')}">
+</head>
+
+<body>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('categorias')}"></header>
+
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container" style="max-width: 640px;">
+
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/categorias/listar}">Categorias</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:text="${categoria.idCategoria != null} ? 'Editar categoria' : 'Nova categoria'">Nova categoria</li>
+                </ol>
+            </nav>
+
+            <div class="inv-card p-4 p-md-5">
+                <h1 class="h3 mb-4" th:text="${categoria.idCategoria != null} ? 'Editar categoria' : 'Cadastro de categoria'">Cadastro de categoria</h1>
+
+                <form th:action="@{/categorias/salvar}" method="post" th:object="${categoria}">
+                    <input type="hidden" th:field="*{idCategoria}">
+
+                    <div class="mb-4">
+                        <label for="nomeCategoria" class="form-label fw-semibold">Nome da categoria</label>
+                        <input type="text" class="form-control" id="nomeCategoria"
+                            th:field="*{nomeCategoria}"
+                            th:classappend="${#fields.hasErrors('nomeCategoria')} ? 'is-invalid'"
+                            required maxlength="60" placeholder="Ex.: Material Escolar">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nomeCategoria')}" th:errors="*{nomeCategoria}"></div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Salvar
+                        </button>
+                        <a class="btn btn-outline-secondary" th:href="@{/categorias/listar}">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+
+</html>

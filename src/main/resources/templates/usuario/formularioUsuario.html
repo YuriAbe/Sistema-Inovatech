@@ -1,32 +1,71 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Usuário</title>
+<head th:replace="~{fragments/layout :: head('Criar Conta — Inovatech', 'Crie sua conta institucional no Sistema Inovatech.', 'cadastro, conta, inovatech')}">
 </head>
 
 <body>
-    <h1 style="text-align: center;">Cadastro de Usuário</h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <main id="conteudo" class="inv-auth-wrap">
+        <section class="inv-auth-card" style="width:min(520px,94vw)" aria-labelledby="cadastro-titulo">
+            <a class="d-inline-flex align-items-center gap-2 text-decoration-none mb-4" th:href="@{/}">
+                <span class="inv-brand-badge" aria-hidden="true">i</span>
+                <span class="fw-bold fs-5" style="color:var(--inv-navy)">Inovatech</span>
+            </a>
+            <h1 id="cadastro-titulo" class="h3 mb-1">Criar sua conta</h1>
+            <p class="text-muted-inv mb-4">Cadastre-se para acessar o sistema.</p>
 
-    <form th:action="@{/usuarios/salvar}" method="post" th:object="${usuario}">
-        <input type="hidden" name="idUsuario" th:field="*{idUsuario}" />
+            <form th:action="@{/usuarios/salvar}" method="post" th:object="${usuario}">
+                <input type="hidden" th:field="*{idUsuario}">
 
-        <label for="nomeUsuario">Nome:</label>
-        <input type="text" name="nomeUsuario" th:field="*{nomeUsuario}" placeholder="Fulano de Tau" required /><br><br>
+                <div class="mb-3">
+                    <label for="nomeUsuario" class="form-label fw-semibold">Nome completo</label>
+                    <input type="text" class="form-control" id="nomeUsuario" th:field="*{nomeUsuario}"
+                        th:classappend="${#fields.hasErrors('nomeUsuario')} ? 'is-invalid'"
+                        required maxlength="50" placeholder="Seu nome completo">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nomeUsuario')}" th:errors="*{nomeUsuario}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="cpfUsuario" class="form-label fw-semibold">CPF</label>
+                    <input type="text" class="form-control" id="cpfUsuario" th:field="*{cpfUsuario}"
+                        th:classappend="${#fields.hasErrors('cpfUsuario')} ? 'is-invalid'"
+                        required maxlength="11" placeholder="Somente números (11 dígitos)"
+                        data-mask="cpf" data-validate="cpf" inputmode="numeric">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('cpfUsuario')}" th:errors="*{cpfUsuario}">CPF inválido</div>
+                </div>
+                <div class="mb-3">
+                    <label for="loginUsuario" class="form-label fw-semibold">E-mail (será seu login)</label>
+                    <input type="email" class="form-control" id="loginUsuario" th:field="*{loginUsuario}"
+                        th:classappend="${#fields.hasErrors('loginUsuario')} ? 'is-invalid'"
+                        required maxlength="50" autocomplete="username" placeholder="voce@email.com">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('loginUsuario')}" th:errors="*{loginUsuario}"></div>
+                    <small class="form-text-helper"><i class="bi bi-info-circle me-1"></i>O e-mail será seu login no sistema</small>
+                </div>
+                <div class="mb-3">
+                    <label for="senhaUsuario" class="form-label fw-semibold">Senha</label>
+                    <input type="password" class="form-control" id="senhaUsuario" th:field="*{senhaUsuario}"
+                        th:classappend="${#fields.hasErrors('senhaUsuario')} ? 'is-invalid'"
+                        required autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('senhaUsuario')}" th:errors="*{senhaUsuario}"></div>
+                </div>
+                <div class="mb-4">
+                    <label for="confirmarSenha" class="form-label fw-semibold">Confirmar senha</label>
+                    <input type="password" class="form-control" id="confirmarSenha" name="confirmarSenha"
+                        required placeholder="Repita a senha" autocomplete="new-password">
+                    <div class="invalid-feedback">As senhas não coincidem.</div>
+                </div>
 
-        <label for="cpfUsuario">CPF:</label>
-        <input type="text" name="cpfUsuario" th:field="*{cpfUsuario}" placeholder="Digite seu CPF" required /><br><br>
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Criar conta</button>
+            </form>
 
-        <label for="loginUsuario">Login: </label>
-        <input type="text" name="loginUsuario" th:field="*{loginUsuario}" placeholder="Digite seu email" required /><br><br>
-
-        <label for="senhaUsuario">Senha:</label>
-        <input type="password" name="senhaUsuario" th:field="*{senhaUsuario}" placeholder="Digite a sua senha" required /><br><br>
-
-        <button type="submit">Salvar Usuario</button>
-    </form>
+            <div class="d-flex justify-content-between mt-3 small">
+                <a th:href="@{/login}">Já tenho conta</a>
+                <a th:href="@{/}">Voltar ao início</a>
+            </div>
+        </section>
+    </main>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+    <script th:src="@{/js/validacao.js}"></script>
 </body>
 
 </html>

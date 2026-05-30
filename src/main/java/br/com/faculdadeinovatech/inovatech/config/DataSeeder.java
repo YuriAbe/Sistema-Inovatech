@@ -48,6 +48,17 @@ public class DataSeeder {
                 usuarioRepository.save(admin);
             }
 
+            // ---- Usuário padrão para teste do carrinho ----
+            if (usuarioRepository.findByLoginUsuario("usuario@email.com").isEmpty()) {
+                Usuario user = new Usuario();
+                user.setNomeUsuario("Usuário Teste");
+                user.setCpfUsuario("12345678909");
+                user.setLoginUsuario("usuario@email.com");
+                user.setSenhaUsuario(passwordEncoder.encode("123456"));
+                user.setRole("ROLE_USER");
+                usuarioRepository.save(user);
+            }
+
             // ---- Categorias ----
             List<Categoria> categorias = new ArrayList<>();
             if (categoriaRepository.count() == 0) {

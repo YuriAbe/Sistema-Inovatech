@@ -1,42 +1,93 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Disciplinas</title>
+<head th:replace="~{fragments/layout :: head('Disciplinas — Painel Inovatech', 'Gestão de disciplinas da instituição.', 'gestão disciplinas, inovatech')}">
 </head>
 
 <body>
-    <h1>Lista de Disciplinas</h1>
-    <a th:href="@{/disciplinas/criar}">Adicionar Nova Disciplina</a>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('disciplinas')}"></header>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <td>Nome:</td>
-                <td>Sigla:</td>
-                <td>Carga Horária:</td>
-                <td>Curso:</td>
-                <td>Professor:</td>
-            </tr>
-        </thead>
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container">
 
-        <tbody>
-            <tr th:each="disciplina : ${disciplinas}">
-                <td th:text="${disciplina.nomeDisciplina}"></td>
-                <td th:text="${disciplina.siglaDisciplina}"></td>
-                <td th:text="${disciplina.cargaHorariaDisciplina}"></td>
-                <td th:text="${disciplina.curso.nomeCurso}"></td>
-                <td th:text="${disciplina.professor.nomeProfessor}"></td>
-                <td>
-                    <a th:href="@{/disciplinas/editar/{id}(id=${disciplina.idDisciplina})}">Editar</a>
-                    <a th:href="@{/disciplinas/excluir/{id}(id=${disciplina.idDisciplina})}">Excluir</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Disciplinas</li>
+                </ol>
+            </nav>
 
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <div>
+                    <h1 class="h3 mb-0">Disciplinas</h1>
+                    <p class="text-muted-inv mb-0"><span th:text="${#lists.size(disciplinas)}">0</span> disciplina(s) cadastrada(s)</p>
+                </div>
+                <a class="btn btn-primary" th:href="@{/disciplinas/criar}">
+                    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Nova disciplina
+                </a>
+            </div>
+
+            <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${sucesso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${erro}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="inv-card p-0 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <caption class="visually-hidden">Lista de disciplinas cadastradas</caption>
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Sigla</th>
+                                <th scope="col">Carga horária</th>
+                                <th scope="col">Curso</th>
+                                <th scope="col">Professor</th>
+                                <th scope="col" class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="disciplina : ${disciplinas}">
+                                <td class="fw-semibold" th:text="${disciplina.nomeDisciplina}">—</td>
+                                <td><span class="badge text-bg-light" th:text="${disciplina.siglaDisciplina}">—</span></td>
+                                <td th:text="${disciplina.cargaHorariaDisciplina} + ' h'">0 h</td>
+                                <td th:text="${disciplina.curso != null ? disciplina.curso.nomeCurso : 'Sem curso'}">—</td>
+                                <td th:text="${disciplina.professor != null ? disciplina.professor.nomeProfessor : 'Sem professor'}">—</td>
+                                <td class="text-end text-nowrap">
+                                    <a class="btn btn-sm btn-outline-primary"
+                                        th:href="@{/disciplinas/editar/{id}(id=${disciplina.idDisciplina})}"
+                                        th:aria-label="'Editar ' + ${disciplina.nomeDisciplina}">
+                                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger"
+                                        th:href="@{/disciplinas/excluir/{id}(id=${disciplina.idDisciplina})}"
+                                        th:aria-label="'Excluir ' + ${disciplina.nomeDisciplina}"
+                                        onclick="return confirm('Deseja realmente excluir esta disciplina?');">
+                                        <i class="bi bi-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(disciplinas)}">
+                                <td colspan="6" class="text-center text-muted-inv py-4">Nenhuma disciplina cadastrada.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
 
 </html>

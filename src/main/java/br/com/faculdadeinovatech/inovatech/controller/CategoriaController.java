@@ -1,73 +1,68 @@
 package br.com.faculdadeinovatech.inovatech.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.faculdadeinovatech.inovatech.dto.CategoriaRequestDTO;
-import br.com.faculdadeinovatech.inovatech.dto.CategoriaResponseDTO;
+import br.com.faculdadeinovatech.inovatech.entity.Categoria;
 import br.com.faculdadeinovatech.inovatech.service.CategoriaService;
-
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("categorias")
+@RequestMapping("/categorias")
 public class CategoriaController {
 
     @Autowired
     private CategoriaService categoriaService;
 
-    @GetMapping("/busca")
-    public ResponseEntity<Page<CategoriaResponseDTO>> buscar(
-            @RequestParam(required = false) String nome,
-            @PageableDefault(size = 5, sort = "nome") Pageable paginacao) {
-        if (nome == null || nome.isBlank()) {
-            return ResponseEntity.ok(categoriaService.listar(paginacao));
+    @GetMapping("/listar")
+    public String listar(Model model) {
+        model.addAttribute("categorias", categoriaService.listarTodasEntidades());
+        return "categoria/listaCategorias";
+    }
+
+    @GetMapping("/criar")
+    public String criarForm(Model model) {
+        model.addAttribute("categoria", new Categoria());
+        return "categoria/formularioCategoria";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("categoria", categoriaService.buscarEntity(id));
+        return "categoria/formularioCategoria";
+    }
+
+    @PostMapping("/salvar")
+    public String salvar(@Valid @ModelAttribute Categoria categoria,
+                         BindingResult result,
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "categoria/formularioCategoria";
         }
-
-        return ResponseEntity.ok(categoriaService.buscarPorNome(nome, paginacao));
+        categoriaService.salvar(categoria);
+        redirectAttributes.addFlashAttribute("sucesso", "Categoria salva com sucesso!");
+        return "redirect:/categorias/listar";
     }
 
-    @GetMapping
-    public ResponseEntity<Page<CategoriaResponseDTO>> listar(
-            @PageableDefault(page = 0, size = 10, sort = "nome", direction = Sort.Direction.ASC) Pageable paginacao) {
-        return ResponseEntity.ok(categoriaService.listar(paginacao));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> buscar(@PathVariable Integer id) {
-        return categoriaService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> criar(@Valid @RequestBody CategoriaRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.salvar(dto));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> update(@PathVariable Integer id,
-            @Valid @RequestBody CategoriaRequestDTO dto) {
-        CategoriaResponseDTO atualizado = categoriaService.editar(id, dto);
-        return ResponseEntity.ok(atualizado);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-        categoriaService.deletar(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/excluir/{id}")
+    public String excluir(@PathVariable Integer id, RedirectAttributes redirect) {
+        try {
+            categoriaService.deletar(id);
+            redirect.addFlashAttribute("sucesso", "Categoria excluída com sucesso!");
+        } catch (DataIntegrityViolationException e) {
+            redirect.addFlashAttribute("erro",
+                    "Não é possível excluir esta categoria porque existem produtos vinculados a ela.");
+        }
+        return "redirect:/categorias/listar";
     }
 }

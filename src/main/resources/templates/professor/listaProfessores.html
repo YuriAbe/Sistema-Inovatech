@@ -1,40 +1,91 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Professores</title>
+<head th:replace="~{fragments/layout :: head('Professores — Painel Inovatech', 'Gestão de professores da instituição.', 'gestão professores, inovatech')}">
 </head>
 
 <body>
-    <h1>Lista de Professores</h1>
-    <a th:href="@{/professores/criar}">Adicionar Novo Professor</a>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('professores')}"></header>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <td>Nome:</td>
-                <td>Telefone:</td>
-                <td>CPF:</td>
-                <td>Graduação:</td>
-            </tr>
-        </thead>
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container">
 
-        <tbody>
-            <tr th:each="professor : ${professores}">
-                <td th:text="${professor.nomeProfessor}"></td>
-                <td th:text="${professor.telefoneProfessor}"></td>
-                <td th:text="${professor.cpfProfessor}"></td>
-                <td th:text="${professor.graduacaoProfessor}"></td>
-                <td>
-                    <a th:href="@{/professores/editar/{id}(id=${professor.idProfessor})}">Editar</a>
-                    <a th:href="@{/professores/excluir/{id}(id=${professor.idProfessor})}">Excluir</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Professores</li>
+                </ol>
+            </nav>
 
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <div>
+                    <h1 class="h3 mb-0">Professores</h1>
+                    <p class="text-muted-inv mb-0"><span th:text="${#lists.size(professores)}">0</span> professor(es) cadastrado(s)</p>
+                </div>
+                <a class="btn btn-primary" th:href="@{/professores/criar}">
+                    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Novo professor
+                </a>
+            </div>
+
+            <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${sucesso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${erro}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="inv-card p-0 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <caption class="visually-hidden">Lista de professores cadastrados</caption>
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Telefone</th>
+                                <th scope="col">CPF</th>
+                                <th scope="col">Graduação</th>
+                                <th scope="col" class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="professor : ${professores}">
+                                <td class="fw-semibold" th:text="${professor.nomeProfessor}">—</td>
+                                <td th:text="${professor.telefoneProfessor}">—</td>
+                                <td th:text="${professor.cpfProfessor}">—</td>
+                                <td th:text="${professor.graduacaoProfessor}">—</td>
+                                <td class="text-end text-nowrap">
+                                    <a class="btn btn-sm btn-outline-primary"
+                                        th:href="@{/professores/editar/{id}(id=${professor.idProfessor})}"
+                                        th:aria-label="'Editar ' + ${professor.nomeProfessor}">
+                                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger"
+                                        th:href="@{/professores/excluir/{id}(id=${professor.idProfessor})}"
+                                        th:aria-label="'Excluir ' + ${professor.nomeProfessor}"
+                                        onclick="return confirm('Deseja realmente excluir este professor?');">
+                                        <i class="bi bi-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(professores)}">
+                                <td colspan="5" class="text-center text-muted-inv py-4">Nenhum professor cadastrado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
 
 </html>

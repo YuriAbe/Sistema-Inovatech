@@ -41,6 +41,10 @@ public class PedidoService {
         return pedidoRepository.findAll();
     }
 
+    public List<Pedido> listarTodosComItens() {
+        return pedidoRepository.findAllComItens();
+    }
+
     public Pedido findById(Integer id) {
         return pedidoRepository.findById(id).orElse(null);
     }

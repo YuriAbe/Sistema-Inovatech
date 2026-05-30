@@ -28,12 +28,24 @@
                 </a>
             </div>
 
+            <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${sucesso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${erro}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <div class="inv-card p-0 overflow-hidden">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <caption class="visually-hidden">Lista de produtos cadastrados</caption>
                         <thead class="table-light">
                             <tr>
+                                <th scope="col">Imagem</th>
                                 <th scope="col">Descrição</th>
                                 <th scope="col">Valor</th>
                                 <th scope="col">Marca</th>
@@ -43,6 +55,11 @@
                         </thead>
                         <tbody>
                             <tr th:each="produto : ${produtos}">
+                                <td>
+                                    <img th:src="${produto.imagemUrl != null and !produto.imagemUrl.isEmpty()} ? ${produto.imagemUrl} : @{/images/produto-placeholder.svg}"
+                                         alt="Produto" class="produto-img-thumb"
+                                         onerror="this.src='/images/produto-placeholder.svg'">
+                                </td>
                                 <td th:text="${produto.descricaoProduto}">—</td>
                                 <td th:text="'R$ ' + ${#numbers.formatDecimal(produto.valorProduto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</td>
                                 <td th:text="${produto.marcaProduto}">—</td>
@@ -70,7 +87,7 @@
                                 </td>
                             </tr>
                             <tr th:if="${produtos.isEmpty()}">
-                                <td colspan="5" class="text-center text-muted-inv py-4">Nenhum produto cadastrado.</td>
+                                <td colspan="6" class="text-center text-muted-inv py-4">Nenhum produto cadastrado.</td>
                             </tr>
                         </tbody>
                     </table>

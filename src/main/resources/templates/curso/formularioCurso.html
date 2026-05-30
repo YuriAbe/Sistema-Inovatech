@@ -1,28 +1,62 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Formulário do Curso </title>
+<head th:replace="~{fragments/layout :: head('Cadastro de Curso — Inovatech', 'Cadastro de cursos da instituição.', 'cadastro curso, inovatech')}">
 </head>
 
 <body>
-    <h1>Formulário de Curso</h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('cursos')}"></header>
 
-    <form th:action="@{/cursos/salvar}" method="post" th:object="${curso}">
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container" style="max-width: 640px;">
 
-        <input type="hidden" name="idCurso" th:field="*{idCurso}" />
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/cursos/listar}">Cursos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:text="${curso.idCurso != null} ? 'Editar curso' : 'Novo curso'">Novo curso</li>
+                </ol>
+            </nav>
 
-        <label for="nomeCurso">Nome:</label>
-        <input type="text" name="nomeCurso" th:field="*{nomeCurso}" required /><br><br>
+            <div class="inv-card p-4 p-md-5">
+                <h1 class="h3 mb-4" th:text="${curso.idCurso != null} ? 'Editar curso' : 'Cadastro de curso'">Cadastro de curso</h1>
 
-        <label for="cargaHorariaCurso">Carga Horária:</label>
-        <input type="number" name="cargaHorariaCurso" th:field="*{cargaHorariaCurso}" /><br><br>
+                <form th:action="@{/cursos/salvar}" method="post" th:object="${curso}">
+                    <input type="hidden" th:field="*{idCurso}">
 
-        <button type="submit">Salvar</button>
-    </form>
+                    <div class="mb-3">
+                        <label for="nomeCurso" class="form-label fw-semibold">Nome do curso</label>
+                        <input type="text" class="form-control" id="nomeCurso" th:field="*{nomeCurso}"
+                            th:classappend="${#fields.hasErrors('nomeCurso')} ? 'is-invalid'"
+                            required maxlength="40" placeholder="Ex.: Ciência da Computação">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nomeCurso')}" th:errors="*{nomeCurso}"></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="cargaHorariaCurso" class="form-label fw-semibold">Carga horária (horas)</label>
+                        <input type="number" min="1" class="form-control" id="cargaHorariaCurso"
+                            th:field="*{cargaHorariaCurso}"
+                            th:classappend="${#fields.hasErrors('cargaHorariaCurso')} ? 'is-invalid'"
+                            required placeholder="Ex.: 3200">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('cargaHorariaCurso')}" th:errors="*{cargaHorariaCurso}"></div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Salvar
+                        </button>
+                        <a class="btn btn-outline-secondary" th:href="@{/cursos/listar}">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
-
 
 </html>

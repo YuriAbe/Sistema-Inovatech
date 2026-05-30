@@ -21,51 +21,44 @@ O sistema foi projetado com foco em **segurança, organização e escalabilidade
 - Cadastro de usuários
 - Login com autenticação segura (Spring Security)
 - Criptografia de senha com BCrypt
-- Controle de perfis (Roles)
+- Separação de perfis (`ROLE_ADMIN` e `ROLE_USER`)
+- Redirecionamento inteligente após login (Admin vai para o painel, Usuário vai para a vitrine)
 
 ### 🔁 Recuperação de Senha
 - Envio de e-mail com token único
 - Token com expiração automática
 - Validação de token (válido, expirado ou inválido)
 - Redefinição segura de senha
-- Invalidação automática do token após uso
-- Página dedicada para token expirado com redirecionamento automático
+
+### 🛒 Carrinho de Compras (Novo!)
+- Carrinho de compras persistido na sessão do usuário
+- Adicionar produtos diretamente da vitrine ou dos detalhes do produto
+- Alterar quantidade e remover itens dinamicamente
+- Finalizar pedido vinculando a um aluno específico
+- Design responsivo e amigável
 
 ---
 
-### 📚 Gestão Acadêmica (CRUD Completo)
-
-O sistema permite o gerenciamento completo das seguintes entidades:
-
-- 👨‍🎓 **Alunos**
-- 📖 **Cursos**
-- 👨‍🏫 **Professores**
-- 🧩 **Disciplinas**
-- 👤 **Usuários**
-
-Operações disponíveis:
-- Criar
-- Listar
-- Atualizar
-- Remover
+### 📚 Gestão Acadêmica (Painel Administrativo)
+Acesso exclusivo para administradores gerenciarem:
+- 👨‍🎓 **Alunos**, 📖 **Cursos**, 👨‍🏫 **Professores**, 🧩 **Disciplinas**
+- 📦 **Produtos**, 🏷️ **Categorias**, 🧾 **Pedidos**, 📊 **Relatórios**
 
 ---
 
 ## 🧱 Arquitetura do Projeto
 
-O projeto segue o padrão **MVC (Model-View-Controller)** com separação clara de responsabilidades:
+O projeto segue o padrão **MVC (Model-View-Controller)**:
 
 ```
-
 📦 inovatech
-┣ 📂 controller   → Camada de entrada (HTTP)
-┣ 📂 service      → Regras de negócio
+┣ 📂 controller   → Camada de entrada (HTTP) e mapeamento de rotas
+┣ 📂 service      → Regras de negócio e escopo de sessão (Carrinho)
 ┣ 📂 repository   → Acesso ao banco (JPA)
-┣ 📂 entity       → Modelos de dados
+┣ 📂 entity       → Modelos de dados mapeados no banco
 ┣ 📂 dto          → Transferência de dados
-┣ 📂 security     → Configurações de autenticação/autorização
-
-````
+┣ 📂 security     → Configurações de autenticação/autorização e sucesso de login
+```
 
 ---
 
@@ -79,135 +72,86 @@ O projeto segue o padrão **MVC (Model-View-Controller)** com separação clara 
 | Spring Data JPA | Persistência de dados |
 | PostgreSQL | Banco de dados |
 | Thymeleaf | Renderização de páginas (MVC) |
-| Spring Mail | Envio de e-mails |
-| Lombok | Redução de boilerplate |
-| Maven | Gerenciamento de dependências |
+| Bootstrap 5 | Estilização, Design Responsivo e Componentes (UI/UX) |
 
 ---
 
-## 📸 Telas do Sistema
+## ⚙️ Como Testar o Sistema Passo a Passo (Tudo Mastigado)
 
-🚧 *Em breve...*
-
-> Aqui serão adicionadas imagens das telas do sistema:
-- Tela de login
-- Cadastro de usuários
-- Recuperação de senha
-- Dashboard
-- CRUDs do sistema
-
----
-
-## ⚙️ Configuração do Projeto
+Se você recebeu este projeto para testar, siga os passos abaixo para deixar tudo rodando na sua máquina.
 
 ### ✅ Pré-requisitos
-- Java 17+
-- Maven
-- PostgreSQL
+1. **Java 17 ou 21** instalado
+2. **PostgreSQL** instalado e rodando
+3. (Opcional) Git para clonar
 
----
+### 🗄️ Passo 1: Configurar Banco de Dados
 
-### 📥 Clonar o repositório
-
-```bash
-git clone https://github.com/YuriAbe/Sistema-Inovatech.git
-cd Sistema-Inovatech
-````
-
----
-
-### 🗄️ Configurar banco de dados
-
-**1. Crie o banco no PostgreSQL** (via `psql` ou pgAdmin):
+Crie um banco de dados vazio no PostgreSQL. O nome padrão esperado é `inova_techdb2`, rodando na porta `5433` (ajuste se o seu for na 5432).
 
 ```sql
-CREATE DATABASE inovatech;
+CREATE DATABASE inova_techdb2;
 ```
 
-**2. Configure as credenciais.** Copie o arquivo de exemplo e ajuste usuário/senha:
-
-```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
-```
+Na raiz do projeto, renomeie (ou copie) o arquivo `src/main/resources/application.properties.example` para `application.properties` e preencha com os dados do seu banco:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/inovatech
+spring.datasource.url=jdbc:postgresql://localhost:5433/inova_techdb2
 spring.datasource.username=postgres
-spring.datasource.password=postgres
+spring.datasource.password=123456
 spring.jpa.hibernate.ddl-auto=update
+server.port=8080
 ```
+> **Nota:** Deixe o `ddl-auto=update`! Ele vai criar as tabelas do zero automaticamente para você.
 
-> O `application.properties` real é ignorado pelo Git — não versione senhas.
-> Com `ddl-auto=update`, o Hibernate cria/atualiza as tabelas automaticamente a
-> partir das entidades, garantindo o **CRUD funcional** sobre o PostgreSQL.
+### ▶️ Passo 2: Rodar a Aplicação
 
-**3. Dados de teste automáticos.** Na primeira execução, a classe
-`config/DataSeeder.java` (um `CommandLineRunner`) popula o banco com dados
-aleatórios — categorias, produtos, alunos e um usuário administrador — **somente
-quando as tabelas estão vazias** (seguro rodar várias vezes).
-
-**Login padrão criado pelo seed:**
-
-| Login   | Senha      | Perfil      |
-|---------|------------|-------------|
-| `admin` | `admin123` | ROLE_ADMIN  |
-
-> A senha é gravada com BCrypt. Para limpar e gerar novos dados, basta esvaziar
-> as tabelas (ou recriar o banco) e rodar a aplicação novamente.
-
----
-
-### 📧 Configurar envio de e-mail
-
-```properties
-spring.mail.host=smtp.gmail.com
-spring.mail.port=587
-spring.mail.username=seu-email@gmail.com
-spring.mail.password=sua-senha-de-app
-```
-
----
-
-### ▶️ Executar aplicação
-
+Abra o terminal na pasta do projeto e rode o comando:
 ```bash
-mvn spring-boot:run
+# Windows
+.\mvnw spring-boot:run
+
+# Linux/Mac
+./mvnw spring-boot:run
 ```
 
+Aguarde o log mostrar que a aplicação iniciou na porta 8080. Abra o navegador em: **http://localhost:8080**
+
+### 🧪 Passo 3: Testar os Dois Perfis (Admin vs Usuário)
+
+O sistema conta com um injetor de dados (`DataSeeder.java`) que cria dois usuários automaticamente na primeira vez que você roda a aplicação. 
+
+#### 👨‍💻 Testando como ADMINISTRADOR
+1. Clique em **"Acessar sistema"**
+2. Use as credenciais:
+   - **Login:** `admin`
+   - **Senha:** `admin123`
+3. Você será redirecionado para o **Painel Administrativo** (`/home`).
+4. Teste criar um aluno, criar uma categoria, criar um produto (com URL de imagem válida) e ver a listagem de pedidos.
+
+#### 🛒 Testando como USUÁRIO COMUM (O Carrinho)
+1. Saia da conta de admin (clique em "Sair" na navbar).
+2. Clique em **"Acessar sistema"** novamente e use as credenciais:
+   - **Login:** `usuario@email.com`
+   - **Senha:** `123456`
+3. Você será redirecionado de volta para a vitrine, mas agora notará que o botão de "Acessar sistema" mudou para um **ícone de Carrinho** e um botão de "Sair".
+4. Vá em "Produtos", clique em **"Adicionar ao carrinho"**.
+5. Um balão vermelho com o número de itens aparecerá no ícone do carrinho no menu superior.
+6. Clique no ícone do carrinho.
+7. Teste alterar a quantidade, veja o subtotal mudando e o total geral calculando corretamente.
+8. Selecione um aluno no select (para quem é o pedido) e clique em **"Finalizar"**.
+9. Você verá a tela de sucesso! (Se você relogar como Admin, verá esse pedido lá no painel).
+
 ---
 
-## 🧪 Testes recomendados
+## 🔒 Segurança Adicional Implementada
 
-* ✅ Cadastro e login de usuários
-* ✅ Fluxo de recuperação de senha
-* ✅ Expiração de token
-* ✅ CRUD completo das entidades
-* ✅ Controle de acesso por perfil
-
----
-
-## 🔒 Segurança
-
-* Senhas criptografadas com BCrypt
-* Tokens únicos e temporários
-* Invalidação automática de token
-* Proteção de rotas com Spring Security
-
----
-
-## 🚧 Status do Projeto
-
-🚧 **Em desenvolvimento**
-
-Próximas melhorias planejadas:
-
-* Interface mais moderna (UI/UX)
-* Logs e monitoramento
+* **Controle por Rotas:** Um usuário comum (`ROLE_USER`) que tentar acessar `/home` ou qualquer rota administrativa receberá um erro de acesso negado (403). O admin (`ROLE_ADMIN`) tem acesso irrestrito aos painéis de CRUD.
+* O sistema não expõe endpoints do banco.
 
 ---
 
 ## 📄 Licença
-
 Este projeto está sob a licença MIT.
 
 ---
@@ -215,6 +159,5 @@ Este projeto está sob a licença MIT.
 ## 👨‍💻 Autor
 
 Desenvolvido por:
-
 **Yuri Ribeiro Abe**
 🔗 [https://github.com/YuriAbe](https://github.com/YuriAbe)

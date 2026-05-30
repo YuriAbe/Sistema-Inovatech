@@ -5,14 +5,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.faculdadeinovatech.inovatech.entity.Professor;
 import br.com.faculdadeinovatech.inovatech.service.ProfessorService;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/professores")
@@ -24,39 +27,47 @@ public class ProfessorController {
     
     // Método para salvar um professor
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Professor professor) {
-        professorService.save(professor); // Salva o professor
-        return "redirect:/professores/listar"; // Redireciona para a página de listagem de professores
+    public String salvar(@Valid @ModelAttribute Professor professor,
+                         BindingResult result,
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "professor/formularioProfessor";
+        }
+        professorService.save(professor);
+        redirectAttributes.addFlashAttribute("sucesso", "Professor salvo com sucesso!");
+        return "redirect:/professores/listar";
     }
 
     // Método para listar todos os professores
     @GetMapping("/listar")
     public String listar(Model model) {
-        List<Professor> professores = professorService.findAll(); // Obtém a lista de professores;
-        model.addAttribute("professores", professores); // Adiciona a lista de professores ao modelo
-        return "professor/listaProfessores"; // Retorna a view para listar os professores
+        List<Professor> professores = professorService.findAll();
+        model.addAttribute("professores", professores);
+        return "professor/listaProfessores";
     }
 
     // Método para abrir o formulário de cadastro de professor
     @GetMapping("/criar")
     public String criarForm(Model model) {
-        model.addAttribute("professor", new Professor()); // Adiciona um novo professor ao modelo
-        return "professor/formularioProfessor"; // Retorna a view para o formulario de cadastro
+        model.addAttribute("professor", new Professor());
+        return "professor/formularioProfessor";
     }
 
     // Metodo para abrir o formulário de edição de professor
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable Integer id, Model model) {
-        Professor professor = professorService.findById(id); // Obtém professor pelo ID
-        model.addAttribute("professor", professor); // Adiciona o professor ao modelo
-        return "professor/formularioProfessor"; // Retorna a view para o formulário de edição
+        Professor professor = professorService.findById(id);
+        model.addAttribute("professor", professor);
+        return "professor/formularioProfessor";
     }
 
-    // Método para excluir um modelo
+    // Método para excluir um professor
     @GetMapping("/excluir/{id}")
-    public String excluir(@PathVariable Integer id) {
-        professorService.deleteById(id); // Exclui o professor direto pelo id
-        return "redirect:/professores/listar"; // Redireciona para a página de listagem de professores.
+    public String excluir(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        professorService.deleteById(id);
+        redirectAttributes.addFlashAttribute("sucesso", "Professor excluído com sucesso!");
+        return "redirect:/professores/listar";
     }
 
 }
