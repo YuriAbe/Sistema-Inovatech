@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head
+    th:replace="~{fragments/layout :: head('Produtos da APM — Inovatech', 'Vitrine de produtos da Associação de Pais e Mestres. Busque, filtre por categoria e faça seu pedido. Renda revertida à comunidade escolar.', 'produtos APM, loja escolar, vitrine, inovatech, comprar produtos escolares')}">
+</head>
+
+<body>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarPublico('produtos')}"></header>
+
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container">
+
+            <!-- ============ Breadcrumbs ============ -->
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Início</a></li>
+                    <li class="breadcrumb-item" th:classappend="${idCategoria == null and (q == null or q.isEmpty())} ? 'active'"
+                        th:attr="aria-current=${idCategoria == null and (q == null or q.isEmpty())} ? 'page'">
+                        <a th:if="${idCategoria != null or (q != null and !q.isEmpty())}" th:href="@{/produtos}">Produtos</a>
+                        <span th:unless="${idCategoria != null or (q != null and !q.isEmpty())}">Produtos</span>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:if="${idCategoria != null or (q != null and !q.isEmpty())}">Resultados filtrados</li>
+                </ol>
+            </nav>
+
+            <header class="mb-4">
+                <h1 class="h2 mb-1">Produtos da APM</h1>
+                <p class="text-muted-inv mb-0">
+                    Produtos da Associação de Pais e Mestres — sua compra apoia a comunidade escolar.
+                </p>
+            </header>
+
+            <!-- ============ Busca + Filtros + Ordenação ============ -->
+            <form class="card border-0 shadow-sm p-3 p-md-4 mb-4" method="get" th:action="@{/produtos}"
+                role="search" aria-label="Buscar e filtrar produtos">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-lg-5">
+                        <label for="q" class="form-label fw-semibold">Buscar produto</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+                            <input type="search" class="form-control" id="q" name="q"
+                                th:value="${q}" placeholder="Digite o nome do produto...">
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <label for="idCategoria" class="form-label fw-semibold">Categoria</label>
+                        <select class="form-select form-select-lg" id="idCategoria" name="idCategoria">
+                            <option value="">Todas as categorias</option>
+                            <option th:each="cat : ${categorias}" th:value="${cat.idCategoria}"
+                                th:text="${cat.nomeCategoria}"
+                                th:selected="${idCategoria != null and idCategoria == cat.idCategoria}"></option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <label for="sort" class="form-label fw-semibold">Ordenar por</label>
+                        <select class="form-select form-select-lg" id="sort" name="sort">
+                            <option value="descricaoProduto,asc" th:selected="${sort == 'descricaoProduto,asc'}">Nome (A-Z)</option>
+                            <option value="descricaoProduto,desc" th:selected="${sort == 'descricaoProduto,desc'}">Nome (Z-A)</option>
+                            <option value="valorProduto,asc" th:selected="${sort == 'valorProduto,asc'}">Menor preço</option>
+                            <option value="valorProduto,desc" th:selected="${sort == 'valorProduto,desc'}">Maior preço</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-funnel me-1" aria-hidden="true"></i>Aplicar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Resumo de resultados -->
+            <div class="d-flex justify-content-between align-items-center mb-3" aria-live="polite">
+                <p class="mb-0 text-muted-inv">
+                    <strong th:text="${totalItens}">0</strong> produto(s) encontrado(s)
+                    <span th:if="${q != null and !q.isEmpty()}">para “<span th:text="${q}"></span>”</span>
+                </p>
+                <a th:if="${(q != null and !q.isEmpty()) or idCategoria != null}" th:href="@{/produtos}"
+                    class="btn btn-sm btn-outline-secondary">Limpar filtros</a>
+            </div>
+
+            <!-- ============ Grade de produtos ============ -->
+            <div class="row g-4" th:if="${!produtos.isEmpty()}">
+                <div class="col-12 col-sm-6 col-lg-4" th:each="produto : ${produtos}">
+                    <article class="inv-card overflow-hidden d-flex flex-column">
+                        <a th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}"
+                            tabindex="-1" aria-hidden="true">
+                            <img class="inv-produto-img" th:src="@{/images/produto-placeholder.svg}"
+                                th:alt="'Imagem do produto ' + ${produto.descricaoProduto}">
+                        </a>
+                        <div class="p-3 d-flex flex-column flex-grow-1">
+                            <span class="badge text-bg-light align-self-start mb-2"
+                                th:text="${produto.categoria != null ? produto.categoria.nomeCategoria : 'Geral'}">Categoria</span>
+                            <h2 class="h6 mb-1">
+                                <a class="text-reset text-decoration-none stretched-none"
+                                    th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}"
+                                    th:text="${produto.descricaoProduto}">Produto</a>
+                            </h2>
+                            <p class="small text-muted-inv descricao-clamp mb-2"
+                                th:text="${'Marca: ' + produto.marcaProduto}">Descrição</p>
+                            <p class="inv-preco mb-3 mt-auto"
+                                th:text="'R$ ' + ${#numbers.formatDecimal(produto.valorProduto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</p>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-outline-primary btn-sm"
+                                    th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}">
+                                    <i class="bi bi-eye me-1" aria-hidden="true"></i>Detalhes
+                                </a>
+                                <a class="btn btn-primary btn-sm" th:href="@{/pedidos/criar}">
+                                    <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Adicionar ao pedido
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Estado vazio -->
+            <div class="text-center py-5" th:if="${produtos.isEmpty()}">
+                <i class="bi bi-search display-4 text-muted-inv" aria-hidden="true"></i>
+                <h2 class="h5 mt-3">Nenhum produto encontrado</h2>
+                <p class="text-muted-inv">Tente outro termo de busca ou remova os filtros aplicados.</p>
+                <a th:href="@{/produtos}" class="btn btn-outline-primary">Ver todos os produtos</a>
+            </div>
+
+            <!-- ============ Paginação ============ -->
+            <nav th:if="${totalPaginas > 1}" aria-label="Paginação dos produtos" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${paginaAtual == 0} ? 'disabled'">
+                        <a class="page-link"
+                            th:href="@{/produtos(page=${paginaAtual - 1}, q=${q}, idCategoria=${idCategoria}, sort=${sort}, size=${size})}"
+                            aria-label="Página anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                        th:classappend="${i == paginaAtual} ? 'active'">
+                        <a class="page-link"
+                            th:href="@{/produtos(page=${i}, q=${q}, idCategoria=${idCategoria}, sort=${sort}, size=${size})}"
+                            th:text="${i + 1}"
+                            th:attr="aria-current=${i == paginaAtual} ? 'page'">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${paginaAtual + 1 >= totalPaginas} ? 'disabled'">
+                        <a class="page-link"
+                            th:href="@{/produtos(page=${paginaAtual + 1}, q=${q}, idCategoria=${idCategoria}, sort=${sort}, size=${size})}"
+                            aria-label="Próxima página">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+
+</html>

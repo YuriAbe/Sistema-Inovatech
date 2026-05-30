@@ -84,4 +84,17 @@ public class ProdutoService {
                 .map(ProdutoResponseDTO::fromEntity);
     }
 
+    // Busca da vitrine pública: combina texto e categoria com paginação/ordenação
+    public Page<ProdutoResponseDTO> buscarVitrine(String q, Integer idCategoria, Pageable pageable) {
+        if (q != null && !q.isBlank()) {
+            return produtoRepository.findByDescricaoProdutoContainingIgnoreCase(q.trim(), pageable)
+                    .map(ProdutoResponseDTO::fromEntity);
+        }
+        if (idCategoria != null) {
+            return produtoRepository.findByCategoria_IdCategoria(idCategoria, pageable)
+                    .map(ProdutoResponseDTO::fromEntity);
+        }
+        return produtoRepository.findAll(pageable).map(ProdutoResponseDTO::fromEntity);
+    }
+
 }

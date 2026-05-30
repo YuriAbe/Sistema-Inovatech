@@ -118,11 +118,42 @@ cd Sistema-Inovatech
 
 ### 🗄️ Configurar banco de dados
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/seu_banco
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
+**1. Crie o banco no PostgreSQL** (via `psql` ou pgAdmin):
+
+```sql
+CREATE DATABASE inovatech;
 ```
+
+**2. Configure as credenciais.** Copie o arquivo de exemplo e ajuste usuário/senha:
+
+```bash
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+```
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/inovatech
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.jpa.hibernate.ddl-auto=update
+```
+
+> O `application.properties` real é ignorado pelo Git — não versione senhas.
+> Com `ddl-auto=update`, o Hibernate cria/atualiza as tabelas automaticamente a
+> partir das entidades, garantindo o **CRUD funcional** sobre o PostgreSQL.
+
+**3. Dados de teste automáticos.** Na primeira execução, a classe
+`config/DataSeeder.java` (um `CommandLineRunner`) popula o banco com dados
+aleatórios — categorias, produtos, alunos e um usuário administrador — **somente
+quando as tabelas estão vazias** (seguro rodar várias vezes).
+
+**Login padrão criado pelo seed:**
+
+| Login   | Senha      | Perfil      |
+|---------|------------|-------------|
+| `admin` | `admin123` | ROLE_ADMIN  |
+
+> A senha é gravada com BCrypt. Para limpar e gerar novos dados, basta esvaziar
+> as tabelas (ou recriar o banco) e rodar a aplicação novamente.
 
 ---
 

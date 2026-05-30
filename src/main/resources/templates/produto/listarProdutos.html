@@ -1,40 +1,104 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Produtos</title>
+<head th:replace="~{fragments/layout :: head('Produtos — Painel Inovatech', 'Gestão de produtos da APM.', 'gestão produtos, inovatech')}">
 </head>
 
 <body>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('produtos')}"></header>
 
-    <h1 style="text-align: center;">
-        Lista de Produtos
-    </h1>
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container">
 
-    <a th:href="@{/produtos/criar}">Novo Produto</a>
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Produtos</li>
+                </ol>
+            </nav>
 
-    <table border="1" align="center">
-        <tr>
-            <th>Descrição</th>
-            <th>Valor</th>
-            <th>Marca</th>
-            <th>Categoria</th>
-            <th colspan="2">Ações</th>
-        </tr>
-        <tr th:each="produto : ${produtos}">
-            <td th:text="${produto.descricaoProduto}">*</td>
-            <td th:text="${produto.valorProduto}">*</td>
-            <td th:text="${produto.marcaProduto}">*</td>
-            <td th:text="${produto.categoria.nomeCategoria}">*</td>
-            <td>
-                <a th:href="@{/produtos/editar/{id}(id=${produto.idProduto})}">Editar</a>
-                <a th:href="@{/produtos/excluir/{id}(id=${produto.idProduto})}">Excluir</a>
-            </td>
-        </tr>
-    </table>
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <div>
+                    <h1 class="h3 mb-0">Produtos</h1>
+                    <p class="text-muted-inv mb-0"><span th:text="${totalItens}">0</span> produto(s) cadastrado(s)</p>
+                </div>
+                <a class="btn btn-primary" th:href="@{/produtos/criar}">
+                    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Novo produto
+                </a>
+            </div>
 
+            <div class="inv-card p-0 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <caption class="visually-hidden">Lista de produtos cadastrados</caption>
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Descrição</th>
+                                <th scope="col">Valor</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col" class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="produto : ${produtos}">
+                                <td th:text="${produto.descricaoProduto}">—</td>
+                                <td th:text="'R$ ' + ${#numbers.formatDecimal(produto.valorProduto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</td>
+                                <td th:text="${produto.marcaProduto}">—</td>
+                                <td>
+                                    <span class="badge text-bg-light"
+                                        th:text="${produto.categoria != null ? produto.categoria.nomeCategoria : 'Geral'}">—</span>
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                        th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}"
+                                        th:aria-label="'Ver ' + ${produto.descricaoProduto}">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-primary"
+                                        th:href="@{/produtos/editar/{id}(id=${produto.idProduto})}"
+                                        th:aria-label="'Editar ' + ${produto.descricaoProduto}">
+                                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger"
+                                        th:href="@{/produtos/excluir/{id}(id=${produto.idProduto})}"
+                                        th:aria-label="'Excluir ' + ${produto.descricaoProduto}"
+                                        onclick="return confirm('Deseja realmente excluir este produto?');">
+                                        <i class="bi bi-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${produtos.isEmpty()}">
+                                <td colspan="5" class="text-center text-muted-inv py-4">Nenhum produto cadastrado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <nav th:if="${totalPaginas > 1}" aria-label="Paginação dos produtos" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${paginaAtual == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/produtos/listar(page=${paginaAtual - 1})}" aria-label="Página anterior">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                        th:classappend="${i == paginaAtual} ? 'active'">
+                        <a class="page-link" th:href="@{/produtos/listar(page=${i})}" th:text="${i + 1}"
+                            th:attr="aria-current=${i == paginaAtual} ? 'page'">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${paginaAtual + 1 >= totalPaginas} ? 'disabled'">
+                        <a class="page-link" th:href="@{/produtos/listar(page=${paginaAtual + 1})}" aria-label="Próxima página">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
 
 </html>

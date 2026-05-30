@@ -22,6 +22,13 @@ public class CategoriaService {
         return categoriaRepository.findAll(pageable).map(CategoriaResponseDTO::fromEntity);
     }
 
+    // Lista completa para popular filtros e selects nas telas
+    public java.util.List<CategoriaResponseDTO> listarTodas() {
+        return categoriaRepository.findAll().stream()
+                .map(CategoriaResponseDTO::fromEntity)
+                .toList();
+    }
+
     public CategoriaResponseDTO salvar(CategoriaRequestDTO dto) {
         Categoria categoria = new Categoria();
         categoria.setNomeCategoria(dto.nomeCategoria());

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head
+    th:replace="~{fragments/layout :: head('Inovatech — Plataforma Acadêmica Institucional', 'Inovatech: plataforma acadêmica institucional da Associação de Pais e Mestres (APM). Conheça o projeto e os produtos com renda revertida à comunidade escolar.', 'inovatech, APM, associação de pais e mestres, produtos escolares, sistema acadêmico, educação')}">
+</head>
+
+<body>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarPublico('home')}"></header>
+
+    <main id="conteudo">
+
+        <!-- ============ HERO ============ -->
+        <section class="inv-hero" aria-labelledby="hero-titulo">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-7">
+                        <span class="badge rounded-pill badge-pill px-3 py-2 mb-3">
+                            <i class="bi bi-mortarboard-fill me-1" aria-hidden="true"></i>Projeto Inovatech
+                        </span>
+                        <h1 id="hero-titulo" class="display-4 fw-bold mb-3">
+                            Inovação que aproxima escola, família e comunidade
+                        </h1>
+                        <p class="lead mb-4">
+                            A plataforma acadêmica da Associação de Pais e Mestres integra a gestão
+                            educacional e a divulgação de produtos cuja renda é revertida em melhorias
+                            para os alunos.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a class="btn btn-gold btn-lg px-4" th:href="@{/produtos}">
+                                <i class="bi bi-bag-heart me-2" aria-hidden="true"></i>Ver produtos da APM
+                            </a>
+                            <a class="btn btn-outline-light btn-lg px-4" href="#sobre">Conheça o projeto</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 d-none d-lg-block">
+                        <div class="ratio ratio-4x3 rounded-4 overflow-hidden shadow-lg">
+                            <img th:src="@{/images/hero-pattern.svg}" alt="" aria-hidden="true"
+                                class="w-100 h-100" style="object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ESTATÍSTICAS ============ -->
+        <section class="bg-white border-bottom" aria-label="Indicadores do projeto Inovatech">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-md-3">
+                        <div class="inv-stat">
+                            <div class="num" th:text="${totalProdutos}">0</div>
+                            <div class="label">Produtos</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="inv-stat">
+                            <div class="num" th:text="${totalCategorias}">0</div>
+                            <div class="label">Categorias</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="inv-stat">
+                            <div class="num" th:text="${totalAlunos}">0</div>
+                            <div class="label">Alunos</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="inv-stat">
+                            <div class="num" th:text="${totalCursos}">0</div>
+                            <div class="label">Cursos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SOBRE / APRESENTAÇÃO ============ -->
+        <section id="sobre" class="inv-section">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6">
+                        <p class="inv-section-eyebrow mb-2">Sobre a plataforma</p>
+                        <h2 class="mb-3">Uma instituição organizada, transparente e conectada</h2>
+                        <p class="text-muted-inv">
+                            O Inovatech centraliza o dia a dia acadêmico — alunos, cursos, professores e
+                            disciplinas — em um ambiente seguro, e abre uma vitrine pública para os produtos
+                            da Associação de Pais e Mestres.
+                        </p>
+                        <ul class="list-unstyled d-grid gap-2 mt-3">
+                            <li><i class="bi bi-check-circle-fill text-success me-2" aria-hidden="true"></i>Gestão acadêmica completa</li>
+                            <li><i class="bi bi-check-circle-fill text-success me-2" aria-hidden="true"></i>Vitrine de produtos da APM</li>
+                            <li><i class="bi bi-check-circle-fill text-success me-2" aria-hidden="true"></i>Acesso seguro e controle de perfis</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Cards de acesso rápido -->
+                        <p class="inv-section-eyebrow mb-3">Acesso rápido</p>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <a class="inv-card d-block text-decoration-none p-4 text-reset" th:href="@{/produtos}">
+                                    <span class="inv-quick-icon mb-3" aria-hidden="true"><i class="bi bi-shop"></i></span>
+                                    <h3 class="h6">Produtos da APM</h3>
+                                    <p class="small text-muted-inv mb-0">Explore a vitrine e faça seu pedido.</p>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a class="inv-card d-block text-decoration-none p-4 text-reset" th:href="@{/login}">
+                                    <span class="inv-quick-icon mb-3" aria-hidden="true"><i class="bi bi-shield-lock"></i></span>
+                                    <h3 class="h6">Acessar o sistema</h3>
+                                    <p class="small text-muted-inv mb-0">Área administrativa e acadêmica.</p>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a class="inv-card d-block text-decoration-none p-4 text-reset" th:href="@{/usuarios/criar}">
+                                    <span class="inv-quick-icon mb-3" aria-hidden="true"><i class="bi bi-person-plus"></i></span>
+                                    <h3 class="h6">Cadastrar-se</h3>
+                                    <p class="small text-muted-inv mb-0">Crie sua conta institucional.</p>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a class="inv-card d-block text-decoration-none p-4 text-reset" href="#contato">
+                                    <span class="inv-quick-icon mb-3" aria-hidden="true"><i class="bi bi-envelope"></i></span>
+                                    <h3 class="h6">Fale conosco</h3>
+                                    <p class="small text-muted-inv mb-0">Tire dúvidas com a secretaria.</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PRODUTOS EM DESTAQUE ============ -->
+        <section class="inv-section bg-white border-top" aria-labelledby="destaque-titulo">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-2">
+                    <div>
+                        <p class="inv-section-eyebrow mb-1">Loja da APM</p>
+                        <h2 id="destaque-titulo" class="mb-0">Produtos em destaque</h2>
+                    </div>
+                    <a class="btn btn-outline-primary" th:href="@{/produtos}">Ver todos
+                        <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
+                </div>
+
+                <div class="row g-4" th:if="${!produtosDestaque.isEmpty()}">
+                    <div class="col-12 col-sm-6 col-lg-3" th:each="produto : ${produtosDestaque}">
+                        <article class="inv-card overflow-hidden">
+                            <img class="inv-produto-img" th:src="@{/images/produto-placeholder.svg}"
+                                th:alt="'Imagem do produto ' + ${produto.descricaoProduto}">
+                            <div class="p-3">
+                                <span class="badge text-bg-light mb-2"
+                                    th:text="${produto.categoria != null ? produto.categoria.nomeCategoria : 'Geral'}">Categoria</span>
+                                <h3 class="h6 mb-1" th:text="${produto.descricaoProduto}">Produto</h3>
+                                <p class="small text-muted-inv mb-2" th:text="${produto.marcaProduto}">Marca</p>
+                                <p class="inv-preco mb-3"
+                                    th:text="'R$ ' + ${#numbers.formatDecimal(produto.valorProduto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</p>
+                                <a class="btn btn-primary btn-sm w-100"
+                                    th:href="@{/produtos/detalhe/{id}(id=${produto.idProduto})}">Ver detalhes</a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <p class="text-muted-inv text-center py-4 mb-0" th:if="${produtosDestaque.isEmpty()}">
+                    Em breve novos produtos disponíveis.
+                </p>
+            </div>
+        </section>
+
+        <!-- ============ NOVIDADES ============ -->
+        <section id="novidades" class="inv-section">
+            <div class="container">
+                <p class="inv-section-eyebrow mb-1">Novidades</p>
+                <h2 class="mb-4">Fique por dentro</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <article class="inv-card p-4">
+                            <p class="small text-muted-inv mb-1"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Institucional</p>
+                            <h3 class="h6">Vitrine de produtos da APM no ar</h3>
+                            <p class="small text-muted-inv mb-0">Agora a comunidade pode conhecer e pedir os produtos diretamente pelo portal.</p>
+                        </article>
+                    </div>
+                    <div class="col-md-4">
+                        <article class="inv-card p-4">
+                            <p class="small text-muted-inv mb-1"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Acessibilidade</p>
+                            <h3 class="h6">Suporte a VLibras</h3>
+                            <p class="small text-muted-inv mb-0">O portal conta com tradução para Língua Brasileira de Sinais.</p>
+                        </article>
+                    </div>
+                    <div class="col-md-4">
+                        <article class="inv-card p-4">
+                            <p class="small text-muted-inv mb-1"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Comunidade</p>
+                            <h3 class="h6">Renda revertida aos alunos</h3>
+                            <p class="small text-muted-inv mb-0">Cada pedido contribui com melhorias para a comunidade escolar.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ CONTATO ============ -->
+        <section id="contato" class="inv-section bg-white border-top">
+            <div class="container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-8">
+                        <p class="inv-section-eyebrow mb-1">Contato</p>
+                        <h2 class="mb-2">Fale com a Associação de Pais e Mestres</h2>
+                        <p class="text-muted-inv mb-0">
+                            <i class="bi bi-envelope me-2" aria-hidden="true"></i>apm@inovatech.example.br
+                            <span class="mx-2">·</span>
+                            <i class="bi bi-telephone me-2" aria-hidden="true"></i>(00) 0000-0000
+                        </p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a class="btn btn-gold btn-lg" th:href="@{/produtos}">Conhecer produtos</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+
+</html>

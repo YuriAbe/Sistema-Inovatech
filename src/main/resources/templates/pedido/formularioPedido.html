@@ -1,63 +1,94 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido</title>
+<head th:replace="~{fragments/layout :: head('Novo Pedido — Inovatech', 'Montagem de pedido de produtos da APM.', 'pedido, inovatech, APM')}">
 </head>
 
 <body>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('produtos')}"></header>
 
-    <datalist id="listaAlunos">
-        <option th:each="a : ${alunos}" th:value="|${a.idAluno} - ${a.nomeAluno}|">
-        </option>
-    </datalist>
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container" style="max-width: 900px;">
 
-    <datalist id="listaProdutos">
-        <option th:each="p : ${produtos}" th:value="|${p.idProduto} - ${p.descricaoProduto}|"
-            th:attr="data-preco=${p.valorProduto}">
-        </option>
-    </datalist>
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Novo pedido</li>
+                </ol>
+            </nav>
 
-    <!-- ALUNO -->
-    <label for="aluno">Aluno:</label>
-    <input list="listaAlunos" id="aluno" type="text" placeholder="Digite o nome ou código do aluno.">
+            <h1 class="h3 mb-4">Montar pedido</h1>
 
-    <!-- PRODUTO -->
-    <label for="produto">Produto:</label>
-    <input list="listaProdutos" id="produto" type="text" placeholder="Digite o produto.">
+            <datalist id="listaAlunos">
+                <option th:each="a : ${alunos}" th:value="|${a.idAluno} - ${a.nomeAluno}|"></option>
+            </datalist>
+            <datalist id="listaProdutos">
+                <option th:each="p : ${produtos}" th:value="|${p.idProduto} - ${p.descricaoProduto}|"
+                    th:attr="data-preco=${p.valorProduto}"></option>
+            </datalist>
 
-    <!-- PEDIDO -->
-    <label for="quantidade">Quantidade</label>
-    <input type="number" id="quantidade" min="0">
+            <div class="inv-card p-4 mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12">
+                        <label for="aluno" class="form-label fw-semibold">Aluno</label>
+                        <input list="listaAlunos" id="aluno" type="text" class="form-control"
+                            placeholder="Digite o nome ou código do aluno">
+                    </div>
+                    <div class="col-sm-7">
+                        <label for="produto" class="form-label fw-semibold">Produto</label>
+                        <input list="listaProdutos" id="produto" type="text" class="form-control"
+                            placeholder="Digite o produto">
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="quantidade" class="form-label fw-semibold">Quantidade</label>
+                        <input type="number" id="quantidade" class="form-control" min="1" value="1">
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-outline-primary w-100" onclick="adicionarItem()">
+                            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-    <button type="button" onclick="adicionarItem()">
-        + Adicionar
-    </button>
+            <div class="inv-card p-0 overflow-hidden mb-4">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <caption class="visually-hidden">Itens adicionados ao pedido</caption>
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Produto</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Preço unitário</th>
+                                <th scope="col">Subtotal</th>
+                                <th scope="col" class="text-end">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-itens">
+                            <tr id="empty-row">
+                                <td colspan="5" class="text-center text-muted-inv py-4">Nenhum produto adicionado ao pedido.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <!-- TABELA DE ITENS -->
-    <table>
-        <tr>
-            <th>Produto</th>
-            <th>Quantidade</th>
-            <th>Preço Unitário</th>
-            <th>Subtotal</th>
-            <th>Ação</th>
-        </tr>
-        <tr>
-            <tbody id="tabela-itens">
-                <tr>
-                    <td colspan="5">Nenhum produto adicionado ao pedido</td>
-                </tr>
-            </tbody>
-        </tr>
-    </table>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <p class="h5 mb-0" aria-live="polite">
+                    Total do pedido: <strong class="inv-preco">R$ <span id="totalPedido">0,00</span></strong>
+                </p>
+                <button class="btn btn-primary btn-lg" onclick="salvarPedido()">
+                    <i class="bi bi-bag-check me-2" aria-hidden="true"></i>Salvar pedido
+                </button>
+            </div>
 
-    <span>Total Pedido</span>
-    <span>R$<span id="totalPedido">0,00</span></span>
+        </div>
+    </main>
 
-    <button onclick="salvarPedido()"> SalvarPedido</button>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 
     <script>
         let itens = [];
@@ -77,7 +108,6 @@
 
             let options = document.querySelectorAll("#listaProdutos option");
             let preco = null;
-
             options.forEach(opt => {
                 if (opt.value === produtoInput) {
                     preco = opt.getAttribute("data-preco");
@@ -90,7 +120,6 @@
             }
 
             let subtotal = quantidade * preco;
-
             itens.push({
                 produto: { idProduto: produtoId },
                 nomeProduto: produtoNome,
@@ -100,8 +129,7 @@
             });
 
             document.getElementById("produto").value = "";
-            document.getElementById("quantidade").value = "";
-
+            document.getElementById("quantidade").value = "1";
             renderTabela();
         }
 
@@ -110,117 +138,80 @@
             renderTabela();
         }
 
-        // NOVO: função para alterar quantidade diretamente na tabela
         function alterarQuantidade(index, novaQuantidade) {
-
             if (novaQuantidade <= 0) {
                 alert("Quantidade inválida!");
                 return;
             }
-
             let item = itens[index];
-
-            item.quantidade = parseInt(novaQuantidade); // atualiza quantidade
-            item.subtotal = item.quantidade * item.preco; // recalcula subtotal
-
-            renderTabela(); // atualiza tela
+            item.quantidade = parseInt(novaQuantidade);
+            item.subtotal = item.quantidade * item.preco;
+            renderTabela();
         }
 
         function renderTabela() {
             let tabela = document.getElementById("tabela-itens");
-            let emptyRow = document.getElementById("empty-row");
-
             tabela.innerHTML = "";
 
             if (itens.length === 0) {
-                tabela.innerHTML = `<tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>`;
+                tabela.innerHTML = `<tr id="empty-row"><td colspan="5" class="text-center text-muted-inv py-4">Nenhum produto adicionado ao pedido.</td></tr>`;
                 document.getElementById("totalPedido").innerText = "0,00";
                 return;
             }
 
             let total = 0;
-
             itens.forEach((item, index) => {
                 total += item.subtotal;
-
                 tabela.innerHTML += `
                 <tr>
                     <td>${item.nomeProduto}</td>
-
-                    <!-- ANTIGO: quantidade apenas como texto
-                    <td>${item.quantidade}</td>
-                    -->
-
-                    <!-- NOVO: campo editável para alterar quantidade -->
                     <td>
-                        <input type="number" min="1" value="${item.quantidade}" 
-                               onchange="alterarQuantidade(${index}, this.value)" 
-                               style="width:60px;">
+                        <input type="number" min="1" value="${item.quantidade}"
+                               class="form-control form-control-sm" style="width:80px;"
+                               aria-label="Quantidade de ${item.nomeProduto}"
+                               onchange="alterarQuantidade(${index}, this.value)">
                     </td>
-
                     <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
                     <td>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
-                    <td>
-                        <button class="btn-remove" onclick="removerItem(${index})">
-                            Remover
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" onclick="removerItem(${index})">
+                            <i class="bi bi-trash" aria-hidden="true"></i><span class="visually-hidden">Remover</span>
                         </button>
                     </td>
-                </tr>
-            `;
+                </tr>`;
             });
 
             document.getElementById("totalPedido").innerText = total.toFixed(2).replace('.', ',');
         }
 
         function salvarPedido() {
-
             const alunoInput = document.getElementById("aluno").value;
 
-            if (!alunoInput) {
-                alert("Selecione um aluno antes de salvar!");
-                return;
-            }
-
-            if (!alunoInput.includes(" - ")) {
+            if (!alunoInput || !alunoInput.includes(" - ")) {
                 alert("Selecione um aluno válido da lista!");
                 return;
             }
-
             if (itens.length === 0) {
                 alert("Adicione ao menos um produto ao pedido!");
                 return;
             }
 
-            // Desestruturação moderna
-            const [alunoId, alunoNome] = alunoInput.split(" - ");
-
+            const [alunoId] = alunoInput.split(" - ");
             const pedido = {
-
-                // IMPORTANTE:
-                // o nome deve ser IGUAL ao da entidade Java
-                aluno: {
-                    idAluno: parseInt(alunoId)
-                },
-
+                aluno: { idAluno: parseInt(alunoId) },
                 itens: itens
             };
 
             fetch("/pedidos", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(pedido)
             })
                 .then(res => {
-
-                    if (!res.ok) {
-                        throw new Error("Erro ao salvar pedido");
-                    }
-
+                    if (!res.ok) throw new Error("Erro ao salvar pedido");
                     return res.text();
                 })
-                .then(data => {
+                .then(() => {
                     alert("Pedido salvo com sucesso!");
                     location.reload();
                 })

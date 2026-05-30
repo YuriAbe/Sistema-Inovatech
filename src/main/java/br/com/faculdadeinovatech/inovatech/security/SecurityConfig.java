@@ -20,10 +20,18 @@ public class SecurityConfig {
 
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(
+                                                                "/",
+                                                                "/produtos",
+                                                                "/produtos/detalhe/**",
                                                                 "/login",
                                                                 "/inovatech",
                                                                 "/css/**",
+                                                                "/js/**",
                                                                 "/images/**",
+                                                                "/webjars/**",
+                                                                "/sitemap.xml",
+                                                                "/robots.txt",
+                                                                "/favicon.ico",
                                                                 "/usuarios/criar",
                                                                 "/usuarios/salvar",
                                                                 "/usuario/formularioUsuario.html",

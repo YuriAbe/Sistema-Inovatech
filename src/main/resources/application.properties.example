@@ -1,0 +1,32 @@
+# =========================================================
+# Inovatech - configuração de exemplo
+# Copie este arquivo para "application.properties" (mesma pasta)
+# e ajuste usuário/senha do seu PostgreSQL.
+# O application.properties real é ignorado pelo Git (não versione senhas).
+# =========================================================
+
+# ---- Banco de dados PostgreSQL ----
+spring.datasource.url=jdbc:postgresql://localhost:5432/inovatech
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# ---- JPA / Hibernate ----
+# "update" cria/atualiza as tabelas a partir das entidades (CRUD funcional).
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=false
+spring.jpa.open-in-view=false
+
+# ---- Seed de dados de teste ----
+# O DataSeeder (CommandLineRunner) gera dados aleatórios na 1ª execução,
+# apenas quando as tabelas estão vazias.
+
+# ---- E-mail (recuperação de senha) - opcional ----
+# Preencha apenas se for testar o fluxo de redefinição de senha.
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=seu-email@gmail.com
+spring.mail.password=sua-senha-de-app
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
