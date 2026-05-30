@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    </meta>
+    <title>Relatório de Alunos</title>
+</head>
+
+<body>
+    <h2>Relatório de Alunos</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome:</th>
+                <th>E-mail:</th>
+                <th>Telefone:</th>
+                <th>Cidade:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="aluno : ${alunos}">
+                <td th:text="${aluno.nomeAluno}"></td>
+                <td th:text="${aluno.emailAluno}"></td>
+                <td th:text="${aluno.telefoneAluno}"></td>
+                <td th:text="${aluno.cidadeAluno}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>

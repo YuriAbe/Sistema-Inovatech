@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">
+        Cadastro de Produtos
+    </h1>
+
+    <form th:action="@{/produtos/salvar}" method="post" th:object="${produto}">
+
+        <input type="hidden" th:field="*{idProduto}">
+
+        <label for="">Descrição: </label>
+        <input type="text" th:field="*{descricaoProduto}">
+        <br />
+
+        <label for="">Valor: </label>
+        <input type="text" th:field="*{valorProduto}">
+        <br />
+
+        <label for="">Marca: </label>
+        <input type="text" th:field="*{marcaProduto}">
+        <br />
+
+        <label for="categoria">Categoria:</label>
+        <select th:field="*{categoria}">
+            <option value="" disabled selected> Selecione um categoria</option>
+            <option th:each="categoria : ${categorias}" th:value="${categoria.idCategoria}"
+                th:text="${categoria.nomeCategoria}"></option>
+        </select><br><br>
+
+        <input type="submit" value="Salvar" />
+
+    </form>
+
+</body>
+
+</html>

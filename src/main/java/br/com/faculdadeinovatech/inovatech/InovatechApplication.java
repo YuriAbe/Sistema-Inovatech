@@ -8,6 +8,6 @@ public class InovatechApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(InovatechApplication.class, args);
-	}
+	} 
 
 }

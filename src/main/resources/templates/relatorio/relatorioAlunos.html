@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Alunos</title>
+</head>
+
+<body>
+
+    <h1>Relatório de Alunos</h1>
+    <a href="/relatorios/alunos/pdf" target="_blank">
+        <button>
+            Gerar PDF
+        </button>
+    </a>
+
+    <br /><br />
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome:</th>
+                <th>E-mail:</th>
+                <th>Telefone:</th>
+                <th>Cidade:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="aluno : ${alunos}">
+                <td th:text="${aluno.nomeAluno}"></td>
+                <td th:text="${aluno.emailAluno}"></td>
+                <td th:text="${aluno.telefoneAluno}"></td>
+                <td th:text="${aluno.cidadeAluno}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
