@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-Vindo ao nosso Sistema Inovatech!</title>
+<head th:replace="~{fragments/layout :: head('Bem-vindo ao Inovatech', 'Portal institucional Inovatech da Associação de Pais e Mestres.', 'inovatech, portal, APM')}">
 </head>
 
 <body>
-    <h1 style="text-align: center;">
-        Bem-vindo ao SIstema Inovatec!
-    </h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarPublico('home')}"></header>
 
-    <h2 style="text-align: center;">
-        <a th:href="@{/login}">Acesso ao Sistema Inovatech!</a>
-    </h2>
-    <h2 style="text-align: center;">
-        <a th:href="@{/usuarios/criar}">Cadastra-se no Sistema Inovatech!</a>
-    </h2>
+    <main id="conteudo" class="inv-section">
+        <div class="container text-center" style="max-width: 720px;">
+            <span class="inv-brand-badge mb-3" style="width:3.5rem;height:3.5rem;font-size:1.6rem" aria-hidden="true">i</span>
+            <h1 class="display-5 mb-3">Bem-vindo ao Inovatech</h1>
+            <p class="lead text-muted-inv mb-4">
+                A plataforma acadêmica institucional da Associação de Pais e Mestres.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a class="btn btn-primary btn-lg" th:href="@{/}">Ir para a página inicial</a>
+                <a class="btn btn-outline-primary btn-lg" th:href="@{/produtos}">Ver produtos</a>
+                <a class="btn btn-gold btn-lg" th:href="@{/login}">Acessar o sistema</a>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
 
 </html>

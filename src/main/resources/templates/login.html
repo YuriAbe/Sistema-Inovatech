@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso ao Sistema Inovatech</title>
+<head th:replace="~{fragments/layout :: head('Acessar o Sistema — Inovatech', 'Acesse o Sistema Inovatech, a plataforma acadêmica da Associação de Pais e Mestres.', 'login, acesso, inovatech, sistema acadêmico')}">
 </head>
 
 <body>
-    <h1 style="text-align: center;">Acesso ao Sistema Inovatech</h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <main id="conteudo" class="inv-auth-wrap">
+        <section class="inv-auth-card" aria-labelledby="login-titulo">
+            <a class="d-inline-flex align-items-center gap-2 text-decoration-none mb-4" th:href="@{/}">
+                <span class="inv-brand-badge" aria-hidden="true">i</span>
+                <span class="fw-bold fs-5" style="color:var(--inv-navy)">Inovatech</span>
+            </a>
+            <h1 id="login-titulo" class="h3 mb-1">Acessar o sistema</h1>
+            <p class="text-muted-inv mb-4">Entre com suas credenciais institucionais.</p>
 
-    <form th:action="@{/login}" method="post">
+            <div class="alert alert-danger py-2" role="alert" th:if="${param.error}">
+                Usuário ou senha inválidos.
+            </div>
+            <div class="alert alert-success py-2" role="status" th:if="${param.logout}">
+                Logout efetuado com sucesso.
+            </div>
 
-        <label for="username">Usuário:</label>
-        <input type="text" name="username">
-        <br>
-        <label for="password">Senha</label>
-        <input type="password" name="password">
-        <br>
+            <form th:action="@{/login}" method="post" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-semibold">Usuário</label>
+                    <div class="input-group">
+                        <span class="input-group-text" aria-hidden="true"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="username" name="username"
+                            autocomplete="username" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold">Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text" aria-hidden="true"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password"
+                            autocomplete="current-password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Entrar</button>
+            </form>
 
-        <button type="submit">Entrar</button>
-
-    </form>
-
-    <p th:if="${param.error}">Login inválido</p>
-    <p th:if="${param.logout}">Logout efetuado</p>
-
-    <h3 style="text-align: center;">
-        <a th:href="@{/forgotPassword}">Esqueceu sua senha?</a>
-    </h3>
+            <div class="d-flex justify-content-between mt-3 small">
+                <a th:href="@{/forgotPassword}">Esqueceu a senha?</a>
+                <a th:href="@{/usuarios/criar}">Criar conta</a>
+            </div>
+        </section>
+    </main>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
 
 </html>

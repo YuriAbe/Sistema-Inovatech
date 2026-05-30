@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-label="Imagem ilustrativa do produto">
+  <rect width="400" height="300" fill="#e8f1f7"/>
+  <g transform="translate(200 140)" fill="none" stroke="#0b6e99" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" opacity="0.55">
+    <rect x="-55" y="-45" width="110" height="90" rx="8"/>
+    <path d="M-55 20 L-15 -15 L15 10 L40 -20 L55 0"/>
+    <circle cx="-25" cy="-22" r="10" fill="#0b6e99" stroke="none"/>
+  </g>
+  <text x="200" y="240" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#5b6b7b">Produto Inovatech</text>
+</svg>

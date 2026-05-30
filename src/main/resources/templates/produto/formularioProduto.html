@@ -1,44 +1,72 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Produtos</title>
+<head th:replace="~{fragments/layout :: head('Cadastro de Produto — Inovatech', 'Cadastro de produtos da APM.', 'cadastro produto, inovatech')}">
 </head>
 
 <body>
-    <h1 style="text-align: center;">
-        Cadastro de Produtos
-    </h1>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarAdmin('produtos')}"></header>
 
-    <form th:action="@{/produtos/salvar}" method="post" th:object="${produto}">
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container" style="max-width: 720px;">
 
-        <input type="hidden" th:field="*{idProduto}">
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/home}">Painel</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/produtos/listar}">Produtos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Novo produto</li>
+                </ol>
+            </nav>
 
-        <label for="">Descrição: </label>
-        <input type="text" th:field="*{descricaoProduto}">
-        <br />
+            <div class="inv-card p-4 p-md-5">
+                <h1 class="h3 mb-4">Cadastro de produto</h1>
 
-        <label for="">Valor: </label>
-        <input type="text" th:field="*{valorProduto}">
-        <br />
+                <form th:action="@{/produtos/salvar}" method="post" th:object="${produto}">
+                    <input type="hidden" th:field="*{idProduto}" th:if="${produto.idProduto != null}">
 
-        <label for="">Marca: </label>
-        <input type="text" th:field="*{marcaProduto}">
-        <br />
+                    <div class="mb-3">
+                        <label for="descricaoProduto" class="form-label fw-semibold">Descrição</label>
+                        <input type="text" class="form-control" id="descricaoProduto"
+                            th:field="*{descricaoProduto}" required minlength="3">
+                    </div>
 
-        <label for="categoria">Categoria:</label>
-        <select th:field="*{categoria}">
-            <option value="" disabled selected> Selecione um categoria</option>
-            <option th:each="categoria : ${categorias}" th:value="${categoria.idCategoria}"
-                th:text="${categoria.nomeCategoria}"></option>
-        </select><br><br>
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-3">
+                            <label for="valorProduto" class="form-label fw-semibold">Valor (R$)</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control"
+                                id="valorProduto" th:field="*{valorProduto}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="marcaProduto" class="form-label fw-semibold">Marca</label>
+                            <input type="text" class="form-control" id="marcaProduto"
+                                th:field="*{marcaProduto}" required minlength="3">
+                        </div>
+                    </div>
 
-        <input type="submit" value="Salvar" />
+                    <div class="mb-4">
+                        <label for="idCategoria" class="form-label fw-semibold">Categoria</label>
+                        <select class="form-select" id="idCategoria" th:field="*{idCategoria}" required>
+                            <option value="" disabled th:selected="${produto.idCategoria == null}">Selecione uma categoria</option>
+                            <option th:each="categoria : ${categorias}" th:value="${categoria.idCategoria}"
+                                th:text="${categoria.nomeCategoria}"></option>
+                        </select>
+                    </div>
 
-    </form>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Salvar
+                        </button>
+                        <a class="btn btn-outline-secondary" th:href="@{/produtos/listar}">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
 
 </html>

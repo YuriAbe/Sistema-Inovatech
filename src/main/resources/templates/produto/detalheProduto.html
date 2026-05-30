@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head
+    th:replace="~{fragments/layout :: head(${produto.descricaoProduto} + ' — Produtos da APM | Inovatech', 'Detalhes do produto ' + ${produto.descricaoProduto} + ' da Associação de Pais e Mestres. Faça seu pedido pelo portal Inovatech.', 'produto APM, ' + ${produto.descricaoProduto} + ', inovatech, loja escolar')}">
+</head>
+
+<body>
+    <a th:replace="~{fragments/layout :: skipLink}"></a>
+    <header th:replace="~{fragments/layout :: navbarPublico('produtos')}"></header>
+
+    <main id="conteudo" class="py-4 py-lg-5">
+        <div class="container">
+
+            <nav aria-label="Trilha de navegação">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Início</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/produtos}">Produtos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:text="${produto.descricaoProduto}">Produto</li>
+                </ol>
+            </nav>
+
+            <div class="row g-4 g-lg-5">
+                <div class="col-lg-6">
+                    <div class="inv-card overflow-hidden">
+                        <img class="w-100" style="aspect-ratio:4/3;object-fit:cover;"
+                            th:src="@{/images/produto-placeholder.svg}"
+                            th:alt="'Imagem do produto ' + ${produto.descricaoProduto}">
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <span class="badge text-bg-light mb-2"
+                        th:text="${produto.categoria != null ? produto.categoria.nomeCategoria : 'Geral'}">Categoria</span>
+                    <h1 class="h2 mb-1" th:text="${produto.descricaoProduto}">Produto</h1>
+                    <p class="text-muted-inv mb-3">
+                        <i class="bi bi-tag me-1" aria-hidden="true"></i>Marca:
+                        <span th:text="${produto.marcaProduto}">Marca</span>
+                    </p>
+
+                    <p class="inv-preco display-6 mb-4"
+                        th:text="'R$ ' + ${#numbers.formatDecimal(produto.valorProduto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</p>
+
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <a class="btn btn-primary btn-lg" th:href="@{/pedidos/criar}">
+                            <i class="bi bi-cart-plus me-2" aria-hidden="true"></i>Adicionar ao pedido
+                        </a>
+                        <a class="btn btn-outline-primary btn-lg" th:href="@{/produtos}">
+                            <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Voltar à vitrine
+                        </a>
+                    </div>
+
+                    <div class="inv-card p-3">
+                        <h2 class="h6">Sobre este produto</h2>
+                        <p class="text-muted-inv mb-0">
+                            Produto da Associação de Pais e Mestres. A renda das vendas é revertida em
+                            melhorias para a comunidade escolar. Para concluir a compra, monte seu pedido
+                            na área de pedidos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: vlibras}"></div>
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+
+</html>

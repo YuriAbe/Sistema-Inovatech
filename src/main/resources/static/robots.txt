@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /produtos
+Disallow: /home
+Disallow: /alunos
+Disallow: /cursos
+Disallow: /professores
+Disallow: /disciplinas
+Disallow: /usuarios
+Disallow: /relatorios
+Disallow: /pedidos
+
+Sitemap: https://inovatech.example.br/sitemap.xml
