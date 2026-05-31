@@ -38,11 +38,11 @@ public class DataSeeder {
             Random rnd = new Random();
 
             // ---- Usuário administrador para login (senha com BCrypt) ----
-            if (usuarioRepository.findByLoginUsuario("admin").isEmpty()) {
+            if (usuarioRepository.findByLoginUsuario("admin@inovatech.com").isEmpty()) {
                 Usuario admin = new Usuario();
                 admin.setNomeUsuario("Administrador Inovatech");
-                admin.setCpfUsuario("00000000000");
-                admin.setLoginUsuario("admin");
+                admin.setCpfUsuario("52998224725");
+                admin.setLoginUsuario("admin@inovatech.com");
                 admin.setSenhaUsuario(passwordEncoder.encode("admin123"));
                 admin.setRole("ROLE_ADMIN");
                 usuarioRepository.save(admin);
@@ -96,14 +96,39 @@ public class DataSeeder {
                         "Eduarda Alves", "Felipe Santos", "Gabriela Dias", "Henrique Costa" };
                 String[] cidades = { "São Paulo", "Campinas", "Santos", "Sorocaba" };
 
-                for (String nome : nomes) {
+                String[] cpfs = {
+                        "52998224725",
+                        "11144477735",
+                        "12345678909",
+                        "39053344705",
+                        "16899535009",
+                        "98765432100",
+                        "86288366757",
+                        "71460238001"
+                };
+
+                for (int i = 0; i < nomes.length; i++) {
+
                     Aluno a = new Aluno();
-                    a.setNomeAluno(nome);
-                    a.setEmailAluno(nome.toLowerCase().replace(" ", ".") + "@email.com");
-                    a.setTelefoneAluno(String.format("%011d", (long) (rnd.nextDouble() * 1e11)));
-                    a.setCpfAluno(String.format("%011d", (long) (rnd.nextDouble() * 1e11)));
-                    a.setEnderecoAluno("Rua das Flores, " + (rnd.nextInt(900) + 100));
-                    a.setCidadeAluno(cidades[rnd.nextInt(cidades.length)]);
+
+                    a.setNomeAluno(nomes[i]);
+                    a.setEmailAluno(
+                            nomes[i].toLowerCase().replace(" ", ".")
+                                    + "@email.com");
+
+                    a.setTelefoneAluno(
+                            String.format("%011d",
+                                    (long) (rnd.nextDouble() * 1e11)));
+
+                    a.setCpfAluno(cpfs[i]);
+
+                    a.setEnderecoAluno(
+                            "Rua das Flores, " +
+                                    (rnd.nextInt(900) + 100));
+
+                    a.setCidadeAluno(
+                            cidades[rnd.nextInt(cidades.length)]);
+
                     alunoRepository.save(a);
                 }
             }
