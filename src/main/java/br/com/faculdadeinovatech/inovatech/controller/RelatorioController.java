@@ -50,6 +50,7 @@ public class RelatorioController {
         OutputStream os = response.getOutputStream();
 
         PdfRendererBuilder builder = new PdfRendererBuilder();
+        builder.useFastMode();
         builder.withHtmlContent(html, null);
         builder.toStream(os);
         builder.run();
