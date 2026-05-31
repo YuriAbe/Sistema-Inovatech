@@ -128,6 +128,7 @@ O sistema conta com um injetor de dados (`DataSeeder.java`) que cria dois usuár
    - **Senha:** `admin123`
 3. Você será redirecionado para o **Painel Administrativo** (`/home`).
 4. Teste criar um aluno, criar uma categoria, criar um produto (com URL de imagem válida) e ver a listagem de pedidos.
+5. Vá em **"Relatórios"** e teste a **Geração de PDF** ultrarrápida dos alunos cadastrados.
 
 #### 🛒 Testando como USUÁRIO COMUM (O Carrinho)
 1. Saia da conta de admin (clique em "Sair" na navbar).
