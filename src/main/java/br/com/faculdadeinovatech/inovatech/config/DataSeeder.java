@@ -38,11 +38,11 @@ public class DataSeeder {
             Random rnd = new Random();
 
             // ---- Usuário administrador para login (senha com BCrypt) ----
-            if (usuarioRepository.findByLoginUsuario("admin@inovatech.com").isEmpty()) {
+            if (usuarioRepository.findByLoginUsuario("admin").isEmpty()) {
                 Usuario admin = new Usuario();
                 admin.setNomeUsuario("Administrador Inovatech");
-                admin.setCpfUsuario("52998224725");
-                admin.setLoginUsuario("admin@inovatech.com");
+                admin.setCpfUsuario("85278149028"); // CPF Válido para teste
+                admin.setLoginUsuario("admin");
                 admin.setSenhaUsuario(passwordEncoder.encode("admin123"));
                 admin.setRole("ROLE_ADMIN");
                 usuarioRepository.save(admin);
@@ -52,7 +52,7 @@ public class DataSeeder {
             if (usuarioRepository.findByLoginUsuario("usuario@email.com").isEmpty()) {
                 Usuario user = new Usuario();
                 user.setNomeUsuario("Usuário Teste");
-                user.setCpfUsuario("12345678909");
+                user.setCpfUsuario("73945203008"); // CPF Válido para teste
                 user.setLoginUsuario("usuario@email.com");
                 user.setSenhaUsuario(passwordEncoder.encode("123456"));
                 user.setRole("ROLE_USER");
@@ -95,40 +95,19 @@ public class DataSeeder {
                 String[] nomes = { "Ana Souza", "Bruno Lima", "Carla Mendes", "Diego Rocha",
                         "Eduarda Alves", "Felipe Santos", "Gabriela Dias", "Henrique Costa" };
                 String[] cidades = { "São Paulo", "Campinas", "Santos", "Sorocaba" };
-
-                String[] cpfs = {
-                        "52998224725",
-                        "11144477735",
-                        "12345678909",
-                        "39053344705",
-                        "16899535009",
-                        "98765432100",
-                        "86288366757",
-                        "71460238001"
+                String[] cpfsValidos = {
+                    "51846279093", "96280457019", "14798032060", "23569874001",
+                    "47185296068", "39614728080", "60923587063", "81254796035"
                 };
 
                 for (int i = 0; i < nomes.length; i++) {
-
                     Aluno a = new Aluno();
-
                     a.setNomeAluno(nomes[i]);
-                    a.setEmailAluno(
-                            nomes[i].toLowerCase().replace(" ", ".")
-                                    + "@email.com");
-
-                    a.setTelefoneAluno(
-                            String.format("%011d",
-                                    (long) (rnd.nextDouble() * 1e11)));
-
-                    a.setCpfAluno(cpfs[i]);
-
-                    a.setEnderecoAluno(
-                            "Rua das Flores, " +
-                                    (rnd.nextInt(900) + 100));
-
-                    a.setCidadeAluno(
-                            cidades[rnd.nextInt(cidades.length)]);
-
+                    a.setEmailAluno(nomes[i].toLowerCase().replace(" ", ".") + "@email.com");
+                    a.setTelefoneAluno(String.format("%011d", (long) (rnd.nextDouble() * 1e11)));
+                    a.setCpfAluno(cpfsValidos[i]);
+                    a.setEnderecoAluno("Rua das Flores, " + (rnd.nextInt(900) + 100));
+                    a.setCidadeAluno(cidades[rnd.nextInt(cidades.length)]);
                     alunoRepository.save(a);
                 }
             }
