@@ -124,7 +124,7 @@ O sistema conta com um injetor de dados (`DataSeeder.java`) que cria dois usuár
 #### 👨‍💻 Testando como ADMINISTRADOR
 1. Clique em **"Acessar sistema"**
 2. Use as credenciais:
-   - **Login:** `admin`
+   - **Login:** `admin@inovatech.com`
    - **Senha:** `admin123`
 3. Você será redirecionado para o **Painel Administrativo** (`/home`).
 4. Teste criar um aluno, criar uma categoria, criar um produto (com URL de imagem válida) e ver a listagem de pedidos.

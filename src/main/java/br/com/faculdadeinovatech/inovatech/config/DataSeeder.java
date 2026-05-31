@@ -38,11 +38,11 @@ public class DataSeeder {
             Random rnd = new Random();
 
             // ---- Usuário administrador para login (senha com BCrypt) ----
-            if (usuarioRepository.findByLoginUsuario("admin").isEmpty()) {
+            if (usuarioRepository.findByLoginUsuario("admin@inovatech.com").isEmpty()) {
                 Usuario admin = new Usuario();
                 admin.setNomeUsuario("Administrador Inovatech");
                 admin.setCpfUsuario("85278149028"); // CPF Válido para teste
-                admin.setLoginUsuario("admin");
+                admin.setLoginUsuario("admin@inovatech.com");
                 admin.setSenhaUsuario(passwordEncoder.encode("admin123"));
                 admin.setRole("ROLE_ADMIN");
                 usuarioRepository.save(admin);
